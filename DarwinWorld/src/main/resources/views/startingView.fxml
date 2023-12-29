@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.GUI.controllers.StartingView">
+   <children>
+      <Button layoutX="250.0" layoutY="187.0" mnemonicParsing="false" onAction="#onSimulationStartClicked" text="Start simulation" />
+   </children>
+</AnchorPane>
