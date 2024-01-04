@@ -20,7 +20,7 @@ public class Animal implements MapElement{
     public Animal(Vector2d position, Animal parent1, Animal parent2) {
         this.direction = new Direction();
         this.position = position;
-        this.genotype = new Genotype(5, parent1, parent2);
+        this.genotype = new Genotype(5, parent1, parent2, 0, 8);
     }
 
     public void move(){
@@ -34,5 +34,9 @@ public class Animal implements MapElement{
 
     public int getEnergy() {
         return energy;
+    }
+
+    public Genotype getGenotype() {
+        return genotype;
     }
 }
