@@ -25,4 +25,8 @@ public class Direction {
             default -> null;
         };
     }
+
+    public void reverse() {
+        rotate(4);
+    }
 }
