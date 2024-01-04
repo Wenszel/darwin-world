@@ -1,23 +1,38 @@
 package agh.ics.oop.model.mapElements;
 
+import agh.ics.oop.model.utils.Direction;
 import agh.ics.oop.model.utils.Genotype;
+
 import agh.ics.oop.model.utils.Vector2d;
 
-import java.util.List;
 
-public class Animal {
+public class Animal implements MapElement{
     private Vector2d position;
+    private int energy;
     private final Genotype genotype;
-    public Animal(Vector2d position, List genotype) {
+    private Direction direction;
+    public Animal(Vector2d position) {
+        this.direction = new Direction();
         this.position = position;
-        this.genotype = new Genotype(genotype);
+        this.genotype = new Genotype(2);
+
+    }
+    public Animal(Vector2d position, Animal parent1, Animal parent2) {
+        this.direction = new Direction();
+        this.position = position;
+        this.genotype = new Genotype(5, parent1, parent2);
     }
 
     public void move(){
-        this.position = new Vector2d(position.getX()+1, position.getY()+1);
+        this.direction.rotate(genotype.getCurrentGene());
+        this.position = this.position.add(this.direction.toVector());
     }
 
     public Vector2d getPosition() {
         return position;
+    }
+
+    public int getEnergy() {
+        return energy;
     }
 }

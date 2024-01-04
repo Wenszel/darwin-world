@@ -2,6 +2,8 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.mapElements.Animal;
+import agh.ics.oop.model.maps.GlobeMap;
+import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.ArrayList;
@@ -9,23 +11,24 @@ import java.util.List;
 
 public class Simulation implements Runnable {
 
-    private List<Animal> animals;
     private final List<SimulationListener>  listeners = new ArrayList<>();
-    public Simulation() {
-        this.animals = new ArrayList<>();
-        this.animals.add(new Animal(new Vector2d(3, 3), new ArrayList<>(List.of(1,2,3))));
+    private final GlobeMap map;
+    public Simulation(GlobeMap map) {
+        this.map = map;
     }
     @Override
     public void run() {
+        map.initializeMap();
         while(true) {
-            for(Animal animal : animals) {
-                animal.move();
-            }
-            mapChanged("moved animals");
+            runDay();
+            mapChanged("Day ended");
             try {
                 Thread.sleep(2000);
             } catch(InterruptedException err) {}
         }
+    }
+    public void runDay() {
+        map.moveAnimals();
     }
 
     public void addSubscriber(SimulationListener listener) {
@@ -41,7 +44,8 @@ public class Simulation implements Runnable {
         }
     }
 
-    public List<Animal> getAnimals() {
-        return animals;
+    public GlobeMap getMap() {
+        return map;
     }
+
 }
