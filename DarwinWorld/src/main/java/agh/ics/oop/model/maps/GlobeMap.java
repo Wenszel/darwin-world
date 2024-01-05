@@ -6,10 +6,7 @@ import agh.ics.oop.model.utils.Vector2d;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GlobeMap implements WorldMap {
 
@@ -22,7 +19,8 @@ public class GlobeMap implements WorldMap {
         this.height = height;
         for(int i=0; i<width; i++) {
             for(int j=0; j<height; j++) {
-                mapFields.put(new Vector2d(i,j), new MapField());
+                Vector2d pos = new Vector2d(i,j);
+                mapFields.put(pos, new MapField(pos));
             }
         }
     }
@@ -34,17 +32,28 @@ public class GlobeMap implements WorldMap {
     private void generateAnimals(){
         //Losujemy mapfields i dajemy do nich zwierzaki (tutaj 2 przykładowe)
         Animal animal = new Animal(new Vector2d(3,3));
-        Animal animal2 = new Animal(new Vector2d(5,7));
+        Animal animal2 = new Animal(new Vector2d(3,3));
+
         mapFields.get(animal.getPosition()).addAnimal(animal);
         animals.add(animal);
+
         mapFields.get(animal2.getPosition()).addAnimal(animal2);
         animals.add(animal2);
+
     }
     public void moveAnimals() {
         for(Animal animal : animals) {
             mapFields.get(animal.getPosition()).removeAnimal(animal);
             animal.move(new Vector2d(width-1, height-1));
             mapFields.get(animal.getPosition()).addAnimal(animal);
+        }
+    }
+    public void reproduceAnimals() {
+        for(MapField field : mapFields.values()) {
+            Optional<Animal> newAnimal = field.reproduceAnimals();
+            if(newAnimal.isPresent()) {
+                animals.add(newAnimal.get());
+            }
         }
     }
     public Map<Vector2d, MapField> getMapFields() {
