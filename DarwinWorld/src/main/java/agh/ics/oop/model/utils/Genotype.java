@@ -23,13 +23,13 @@ public class Genotype {
         currentGeneIndex = rand.nextInt(length);
     }
 
-    public Genotype(int length, Animal parent1, Animal parent2, int minMutations, int maxMutations) {
+    public Genotype(int length, Animal strongerParent, Animal weakerParent, int minMutations, int maxMutations) {
         this.length = length;
         this.maxMutations = maxMutations;
         this.minMutations = minMutations;
         Random rand = new Random();
         currentGeneIndex = rand.nextInt(length);
-        genotype.addAll(generateNewGenotype(parent1, parent2));
+        genotype.addAll(generateNewGenotype(strongerParent, weakerParent));
     }
 
     public int getCurrentGene() {
@@ -41,20 +41,25 @@ public class Genotype {
     public List<Integer> getGenotypeList() {
         return genotype;
     }
-    private List<Integer> generateNewGenotype(Animal parent1, Animal parent2) {
-        int totalEnergy = parent1.getEnergy() + parent2.getEnergy();
-        List<Integer> parent1GenotypeList = parent1.getGenotype().getGenotypeList();
-        List<Integer> parent2GenotypeList = parent2.getGenotype().getGenotypeList();
+    private List<Integer> generateNewGenotype(Animal strongerParent, Animal weakerParent) {
+        int totalEnergy = strongerParent.getEnergy() + weakerParent.getEnergy();
+        if(AnimalComparator.compare(strongerParent, weakerParent) < 1) {
+            Animal temp = strongerParent;
+            strongerParent = weakerParent;
+            weakerParent = temp;
+        }
+        List<Integer> strongerParentGenotypeList = strongerParent.getGenotype().getGenotypeList();
+        List<Integer> weakerParentGenotypeList = weakerParent.getGenotype().getGenotypeList();
         List<Integer> childrenGenotypeList = new ArrayList<>();
-        int splitPoint = (int) Math.round(parent1GenotypeList.size() * ((double) parent1.getEnergy() / totalEnergy));
+        int splitPoint = (int) Math.round(strongerParentGenotypeList.size() * ((double) strongerParent.getEnergy() / totalEnergy));
         Random rand = new Random();
 
         if (rand.nextBoolean()) {
-            childrenGenotypeList.addAll(parent1GenotypeList.subList(0, splitPoint));
-            childrenGenotypeList.addAll(parent2GenotypeList.subList(splitPoint, length));
+            childrenGenotypeList.addAll(strongerParentGenotypeList.subList(0, splitPoint));
+            childrenGenotypeList.addAll(weakerParentGenotypeList.subList(splitPoint, length));
         } else {
-            childrenGenotypeList.addAll(parent2GenotypeList.subList(0, splitPoint));
-            childrenGenotypeList.addAll(parent1GenotypeList.subList(splitPoint, length));
+            childrenGenotypeList.addAll(weakerParentGenotypeList.subList(0, splitPoint));
+            childrenGenotypeList.addAll(strongerParentGenotypeList.subList(splitPoint, length));
         }
         mutate(childrenGenotypeList);
         return childrenGenotypeList;

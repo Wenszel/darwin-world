@@ -16,14 +16,14 @@ public class Animal implements MapElement {
     public Animal(Vector2d position) {
         this.direction = new Direction();
         this.position = position;
-        this.genotype = new Genotype(2);
+        this.genotype = new Genotype(5);
 
     }
 
-    public Animal(Vector2d position, Animal parent1, Animal parent2) {
+    public Animal(Vector2d position, Animal strongerParent, Animal weakerParent) {
         this.direction = new Direction();
         this.position = position;
-        this.genotype = new Genotype(5, parent1, parent2, 0, 8);
+        this.genotype = new Genotype(5, strongerParent, weakerParent, 0, 8);
     }
 
 
