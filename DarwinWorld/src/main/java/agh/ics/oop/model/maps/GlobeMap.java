@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GlobeMap implements WorldMap{
+public class GlobeMap implements WorldMap {
 
     private final Map<Vector2d, MapField> mapFields = new HashMap<>();
     private final List<Animal> animals = new LinkedList();
@@ -33,22 +33,20 @@ public class GlobeMap implements WorldMap{
 
     private void generateAnimals(){
         //Losujemy mapfields i dajemy do nich zwierzaki (tutaj 2 przykładowe)
-        Animal animal = new Animal(new Vector2d(2,2));
-        Animal animal2 = new Animal(new Vector2d(4,3));
+        Animal animal = new Animal(new Vector2d(3,3));
+        Animal animal2 = new Animal(new Vector2d(5,7));
         mapFields.get(animal.getPosition()).addAnimal(animal);
         animals.add(animal);
         mapFields.get(animal2.getPosition()).addAnimal(animal2);
         animals.add(animal2);
     }
     public void moveAnimals() {
-        //Jak mapfields maja aktualizowac swoje zwierzatka?
         for(Animal animal : animals) {
             mapFields.get(animal.getPosition()).removeAnimal(animal);
-            animal.move();
+            animal.move(new Vector2d(width-1, height-1));
             mapFields.get(animal.getPosition()).addAnimal(animal);
         }
     }
-
     public Map<Vector2d, MapField> getMapFields() {
         return mapFields;
     }
