@@ -64,9 +64,9 @@ public class GlobeMap implements WorldMap {
     }
     public void reproduceAnimals() {
         for(MapField field : mapFields.values()) {
-            Animal newAnimal = field.reproduceAnimals();
-            if(newAnimal != null) {
-                animals.add(newAnimal);
+            Optional<Animal> newAnimal = field.reproduceAnimals();
+            if(newAnimal.isPresent()) {
+                animals.add(newAnimal.get());
             }
         }
     }
