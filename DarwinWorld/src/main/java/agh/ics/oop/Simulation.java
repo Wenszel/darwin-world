@@ -32,6 +32,7 @@ public class Simulation implements Runnable {
     public void runDay() {
         map.moveAnimals();
         map.reproduceAnimals();
+        map.growPlants();
     }
 
     public void addSubscriber(SimulationListener listener) {

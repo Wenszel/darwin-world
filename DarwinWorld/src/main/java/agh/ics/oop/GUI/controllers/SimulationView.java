@@ -12,8 +12,10 @@ import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,7 @@ public class SimulationView implements SimulationListener {
         params.put(Parameter.REPRODUCTION_ENERGY_COST, 30);
         params.put(Parameter.STARTING_ENERGY, 50);
         params.put(Parameter.DAILY_ENERGY_COST, 1);
+        params.put(Parameter.DAILY_PLANTS_GROWTH, 1);
 
         Simulation simulation = new Simulation(new SimulationConfig(params));
         simulation.addSubscriber(this);
@@ -53,8 +56,15 @@ public class SimulationView implements SimulationListener {
                 } else {
                     rect.setFill(Color.WHITE);
                 }
+                StackPane stack = new StackPane();
+                stack.getChildren().add(rect);
 
-                root.add(rect, x,y);
+                if(mapFields.get(new Vector2d(x, y)).getHasPlant()) {
+                    Text text = new Text("P");
+                    stack.getChildren().add(text);
+                }
+
+                root.add(stack, x,y);
             }
         }
         for(MapField field : mapFields.values()) {

@@ -16,6 +16,7 @@ public class MapField {
     private final Vector2d fieldPosition;
 
     private Plant plant;
+    private boolean hasPlant = false;
 
     public MapField(Vector2d pos, SimulationConfig config, boolean isPreferred) {
         this.fieldPosition = pos;
@@ -42,7 +43,10 @@ public class MapField {
     public void consumePlant() {
 
     }
-
+    public void growPlant() {
+        this.plant = new Plant(fieldPosition);
+        this.hasPlant=true;
+    }
     public Animal reproduceAnimals() {
         if(animalsOnField.size() >= 2) {
             List<Animal> parents = findParents();
@@ -69,5 +73,9 @@ public class MapField {
             }
         }
         return new LinkedList<>(List.of(strongerAnimal, weakerAnimal));
+    }
+
+    public boolean getHasPlant() {
+        return hasPlant;
     }
 }
