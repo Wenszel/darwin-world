@@ -1,6 +1,8 @@
 package agh.ics.oop.GUI.controllers;
 
 import agh.ics.oop.Simulation;
+import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.Config.Parameter;
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.mapElements.MapField;
@@ -13,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +26,15 @@ public class SimulationView implements SimulationListener {
     private GridPane root;
 
     public void init() {
-        GlobeMap map = new GlobeMap(10, 10);
-        Simulation simulation = new Simulation(map);
+        HashMap<Parameter, Integer> params = new HashMap<>();
+        params.put(Parameter.MAP_WIDTH, 5);
+        params.put(Parameter.MAP_HEIGHT, 5);
+        params.put(Parameter.GENOTYPE_LENGTH, 5);
+        params.put(Parameter.MIN_REPRODUCTION_ENERGY, 30);
+        params.put(Parameter.REPRODUCTION_ENERGY_COST, 30);
+        params.put(Parameter.STARTING_ENERGY, 50);
+
+        Simulation simulation = new Simulation(new SimulationConfig(params));
         simulation.addSubscriber(this);
         Thread simulationTask = new Thread(simulation);
         simulationTask.start();

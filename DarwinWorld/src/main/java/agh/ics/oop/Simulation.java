@@ -13,8 +13,10 @@ public class Simulation implements Runnable {
 
     private final List<SimulationListener>  listeners = new ArrayList<>();
     private final GlobeMap map;
-    public Simulation(GlobeMap map) {
-        this.map = map;
+    private final SimulationConfig config;
+    public Simulation(SimulationConfig config) {
+        this.config = config;
+        this.map = new GlobeMap(config);
     }
     @Override
     public void run() {
@@ -23,7 +25,7 @@ public class Simulation implements Runnable {
             runDay();
             mapChanged("Day ended");
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch(InterruptedException err) {}
         }
     }

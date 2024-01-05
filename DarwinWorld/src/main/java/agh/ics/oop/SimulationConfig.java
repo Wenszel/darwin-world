@@ -1,0 +1,49 @@
+package agh.ics.oop;
+
+import agh.ics.oop.model.Config.Parameter;
+
+import java.util.HashMap;
+
+public class SimulationConfig {
+
+    private final int mapWidth;
+    private final int mapHeight;
+    private final int genotypeLength;
+    private final int  minReproductionEnergy;
+    private final int reproductionCost;
+    private final int  startingEnergy;
+
+    public SimulationConfig(HashMap<Parameter, Integer> params) {
+        this.mapWidth = params.get(Parameter.MAP_WIDTH);
+        this.mapHeight = params.get(Parameter.MAP_HEIGHT);
+        this.genotypeLength = params.get(Parameter.GENOTYPE_LENGTH);
+        this.minReproductionEnergy = params.get(Parameter.MIN_REPRODUCTION_ENERGY);
+        this.reproductionCost = params.get(Parameter.REPRODUCTION_ENERGY_COST);
+        this.startingEnergy = params.get(Parameter.STARTING_ENERGY);
+    }
+
+
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    public int getMapHeight() {
+        return mapHeight;
+    }
+
+    public int getGenotypeLength() {
+        return genotypeLength;
+    }
+
+    public int getMinReproductionEnergy() {
+        return minReproductionEnergy;
+    }
+
+    public int getReproductionCost() {
+        return reproductionCost;
+    }
+
+    public int getStartingEnergy() {
+        return startingEnergy;
+    }
+}
