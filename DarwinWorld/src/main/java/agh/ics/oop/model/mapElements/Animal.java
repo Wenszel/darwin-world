@@ -1,6 +1,6 @@
 package agh.ics.oop.model.mapElements;
 
-import agh.ics.oop.model.maps.WorldMap;
+import javafx.scene.paint.Color;
 import agh.ics.oop.model.utils.Direction;
 import agh.ics.oop.model.utils.Genotype;
 
@@ -11,7 +11,7 @@ public class Animal implements MapElement {
     private Vector2d position;
     private int energy;
     private final Genotype genotype;
-    private Direction direction;
+    private final Direction direction;
 
     public Animal(Vector2d position) {
         this.direction = new Direction();
@@ -35,6 +35,15 @@ public class Animal implements MapElement {
 
     public Vector2d getPosition() {
         return position;
+    }
+
+    @Override
+    public Color getVisualRepresentation() {
+        return Color.GRAY;
+    }
+
+    public void setPosition(Vector2d position) {
+        this.position = position;
     }
 
     public int getEnergy() {

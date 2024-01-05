@@ -2,9 +2,9 @@ package agh.ics.oop.GUI.controllers;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.SimulationListener;
-import agh.ics.oop.model.mapElements.Animal;
+import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
-import agh.ics.oop.model.maps.GlobeMap;
+import agh.ics.oop.model.maps.MapType;
 import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
@@ -12,10 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
-import java.util.List;
 import java.util.Map;
-
 
 public class SimulationView implements SimulationListener {
     private final int SIZE = 10;
@@ -23,14 +20,14 @@ public class SimulationView implements SimulationListener {
     private GridPane root;
 
     public void init() {
-        GlobeMap map = new GlobeMap(10, 10);
-        Simulation simulation = new Simulation(map);
+        Simulation simulation = new Simulation(MapType.TUNNEL);
         simulation.addSubscriber(this);
         Thread simulationTask = new Thread(simulation);
         simulationTask.start();
     }
+
     public void drawMap(Simulation simulation) {
-        GlobeMap map = simulation.getMap();
+        WorldMap map = simulation.getMap();
         Map<Vector2d,MapField> mapFields = map.getMapFields();
 
         for (int y = 0; y < map.getWidth(); y++) {
@@ -41,11 +38,11 @@ public class SimulationView implements SimulationListener {
                 root.add(rect, x, y);
             }
         }
-        for(MapField field : mapFields.values()) {
-            for(Animal animal : field.getAnimalsOnField()) {
+        for(Vector2d position : mapFields.keySet()) {
+            for(MapElement element : map.objectsAt(position)) {
                 Rectangle animalUX = new Rectangle(50, 50);
-                animalUX.setFill(Color.GREEN);
-                root.add(animalUX, animal.getPosition().getX(), animal.getPosition().getY());
+                animalUX.setFill(element.getVisualRepresentation());
+                root.add(animalUX, element.getPosition().getX(), element.getPosition().getY());
             }
         }
 

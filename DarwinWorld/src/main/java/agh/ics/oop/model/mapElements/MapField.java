@@ -21,6 +21,14 @@ public class MapField {
         return new LinkedList<>(animalsOnField);
     }
 
+    public List<MapElement> getElementsOnField() {
+        List<MapElement> elements = new LinkedList<>(getAnimalsOnField());
+        if (plant != null) {
+            elements.add(plant);
+        }
+        return elements;
+    }
+
     public void consumePlant() {
 
     }
