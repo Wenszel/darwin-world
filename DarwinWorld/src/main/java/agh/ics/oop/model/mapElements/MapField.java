@@ -17,9 +17,10 @@ public class MapField {
 
     private Plant plant;
 
-    public MapField(Vector2d pos, SimulationConfig config) {
+    public MapField(Vector2d pos, SimulationConfig config, boolean isPreferred) {
         this.fieldPosition = pos;
         this.config = config;
+        this.isPreferred = isPreferred;
     }
 
     public void addAnimal(Animal animal) {
@@ -32,6 +33,10 @@ public class MapField {
 
     public List<Animal> getAnimalsOnField() {
         return Collections.unmodifiableList(animalsOnField);
+    }
+
+    public boolean isPreferred() {
+        return isPreferred;
     }
 
     public void consumePlant() {

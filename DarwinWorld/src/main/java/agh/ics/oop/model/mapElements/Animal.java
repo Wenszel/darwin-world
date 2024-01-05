@@ -13,13 +13,14 @@ public class Animal implements MapElement {
     private int energy;
     private final Genotype genotype;
     private Direction direction;
+    private final int dailyEnergyCost;
 
     public Animal(Vector2d position, SimulationConfig config) {
         this.direction = new Direction();
         this.position = position;
         this.genotype = new Genotype(config.getGenotypeLength());
         this.energy = config.getStartingEnergy();
-
+        this.dailyEnergyCost = config.getDailyEnergyCost();
     }
 
     public Animal(Vector2d position, SimulationConfig config, Animal strongerParent, Animal weakerParent) {
@@ -27,13 +28,14 @@ public class Animal implements MapElement {
         this.position = position;
         this.energy = 2*config.getReproductionCost();
         this.genotype = new Genotype(config.getGenotypeLength(), strongerParent, weakerParent, 0, 8);
+        this.dailyEnergyCost = config.getDailyEnergyCost();
     }
-
 
     public void move(Vector2d rightBottomCorner) {
         this.direction.rotate(genotype.getCurrentGene());
         Vector2d destination = this.position.add(this.direction.toVector());
         this.position = calculatePosition(destination, rightBottomCorner);
+        this.energy-=this.dailyEnergyCost;
     }
 
     public Vector2d getPosition() {

@@ -23,10 +23,12 @@ public class GlobeMap implements WorldMap {
         this.config = config;
         this.width = config.getMapWidth();
         this.height = config.getMapHeight();
-        for(int i=0; i<width; i++) {
-            for(int j=0; j<height; j++) {
+        List<Integer> prefferedRows = calculatePrefferedRows(width, height);
+        for(int j=0; j<height; j++) {
+            boolean isRowPreffered = prefferedRows.contains(j);
+            for(int i=0; i<width; i++) {
                 Vector2d pos = new Vector2d(i,j);
-                mapFields.put(pos, new MapField(pos, config));
+                mapFields.put(pos, new MapField(pos, config, isRowPreffered));
             }
         }
     }
@@ -37,8 +39,8 @@ public class GlobeMap implements WorldMap {
 
     private void generateAnimals(){
         //Losujemy mapfields i dajemy do nich zwierzaki (tutaj 2 przykładowe)
-        Animal animal = new Animal(new Vector2d(3,3), config);
-        Animal animal2 = new Animal(new Vector2d(3,3), config);
+        Animal animal = new Animal(new Vector2d(2,2), config);
+        Animal animal2 = new Animal(new Vector2d(1,3), config);
 
         mapFields.get(animal.getPosition()).addAnimal(animal);
         animals.add(animal);
@@ -61,6 +63,21 @@ public class GlobeMap implements WorldMap {
                 animals.add(newAnimal);
             }
         }
+    }
+    private List<Integer> calculatePrefferedRows(int width, int height)  {
+            int fieldsAmount = width*height;
+            List<Integer> prefferedRows = new LinkedList<>();
+            int centralRow = height/2;
+            int side = -1;
+            int currentRow=centralRow;
+            prefferedRows.add(centralRow);
+            while(prefferedRows.size()*width < fieldsAmount*0.2) {
+                int newRow = currentRow+side*prefferedRows.size();
+                prefferedRows.add(newRow);
+                currentRow=newRow;
+                side*=-1;
+            }
+            return prefferedRows;
     }
     public Map<Vector2d, MapField> getMapFields() {
         return mapFields;
