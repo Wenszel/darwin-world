@@ -25,7 +25,7 @@ public class Simulation implements Runnable {
             runDay();
             mapChanged("Day ended");
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch(InterruptedException err) {}
         }
     }
@@ -33,6 +33,7 @@ public class Simulation implements Runnable {
         map.moveAnimals();
         map.reproduceAnimals();
         map.growPlants();
+        map.consumePlants();
     }
 
     public void addSubscriber(SimulationListener listener) {

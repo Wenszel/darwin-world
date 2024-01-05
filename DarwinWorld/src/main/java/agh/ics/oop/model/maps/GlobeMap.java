@@ -83,6 +83,19 @@ public class GlobeMap implements WorldMap {
             }
         }
     }
+    public void consumePlants() {
+        for(MapField field : mapFields.values()) {
+            Optional<MapField> maybeConsumedField = field.consumePlant();
+            if(maybeConsumedField.isPresent()) {
+                MapField consumedField = maybeConsumedField.get();
+                if(consumedField.isPreferred()) {
+                    emptyPreferredFields.add(consumedField);
+                } else {
+                    emptyNormalFields.add(consumedField);
+                }
+            }
+        }
+    }
     private void findRandomFieldAndGrow(List<MapField> fields) {
         Random rand = new Random();
         int randomIndex = rand.nextInt(fields.size());

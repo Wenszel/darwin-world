@@ -36,6 +36,7 @@ public class SimulationView implements SimulationListener {
         params.put(Parameter.STARTING_ENERGY, 50);
         params.put(Parameter.DAILY_ENERGY_COST, 1);
         params.put(Parameter.DAILY_PLANTS_GROWTH, 1);
+        params.put(Parameter.ENERGY_FROM_PLANT, 5);
 
         Simulation simulation = new Simulation(new SimulationConfig(params));
         simulation.addSubscriber(this);

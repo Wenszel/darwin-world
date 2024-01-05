@@ -14,6 +14,7 @@ public class SimulationConfig {
     private final int  startingEnergy;
     private final int dailyEnergyCost;
     private final int dailyPlantsGrowth;
+    private final int energyFromPlant;
 
     public SimulationConfig(HashMap<Parameter, Integer> params) {
         this.mapWidth = params.get(Parameter.MAP_WIDTH);
@@ -24,6 +25,7 @@ public class SimulationConfig {
         this.startingEnergy = params.get(Parameter.STARTING_ENERGY);
         this.dailyEnergyCost = params.get(Parameter.DAILY_ENERGY_COST);
         this.dailyPlantsGrowth = params.get(Parameter.DAILY_PLANTS_GROWTH);
+        this.energyFromPlant = params.get(Parameter.ENERGY_FROM_PLANT);
     }
 
 
@@ -57,5 +59,9 @@ public class SimulationConfig {
 
     public int getDailyPlantsGrowth() {
         return dailyPlantsGrowth;
+    }
+
+    public int getEnergyFromPlant() {
+        return energyFromPlant;
     }
 }

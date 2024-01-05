@@ -13,7 +13,6 @@ public class MapField {
     private boolean isPreferred;
     private final Vector2d fieldPosition;
 
-    private Plant plant;
     private boolean hasPlant = false;
 
     public MapField(Vector2d pos, SimulationConfig config, boolean isPreferred) {
@@ -38,11 +37,17 @@ public class MapField {
         return isPreferred;
     }
 
-    public void consumePlant() {
-
+    public Optional<MapField> consumePlant() {
+        Optional<Animal> strongestAnimal = animalsOnField.stream().max(new AnimalComparator());
+        if(strongestAnimal.isPresent()) {
+            Animal animal = strongestAnimal.get();
+            animal.addEnergy(config.getEnergyFromPlant());
+            this.hasPlant = false;
+            return Optional.of(this);
+        }
+        return Optional.empty();
     }
     public void growPlant() {
-        this.plant = new Plant(fieldPosition);
         this.hasPlant=true;
     }
     public Optional<Animal> reproduceAnimals() {
