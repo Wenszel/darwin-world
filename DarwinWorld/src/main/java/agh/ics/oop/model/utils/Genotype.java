@@ -43,7 +43,8 @@ public class Genotype {
     }
     private List<Integer> generateNewGenotype(Animal strongerParent, Animal weakerParent) {
         int totalEnergy = strongerParent.getEnergy() + weakerParent.getEnergy();
-        if(AnimalComparator.compare(strongerParent, weakerParent) < 1) {
+        AnimalComparator comparator = new AnimalComparator();
+        if(comparator.compare(strongerParent, weakerParent) < 1) {
             Animal temp = strongerParent;
             strongerParent = weakerParent;
             weakerParent = temp;
