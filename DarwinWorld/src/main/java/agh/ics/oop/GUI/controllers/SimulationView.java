@@ -4,12 +4,14 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
+import agh.ics.oop.model.mapElements.VisualRepresentation;
 import agh.ics.oop.model.maps.MapType;
 import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import java.util.Map;
@@ -40,13 +42,26 @@ public class SimulationView implements SimulationListener {
         }
         for(Vector2d position : mapFields.keySet()) {
             for(MapElement element : map.objectsAt(position)) {
-                Rectangle animalUX = new Rectangle(50, 50);
-                animalUX.setFill(element.getVisualRepresentation());
-                root.add(animalUX, element.getPosition().getX(), element.getPosition().getY());
+                VisualRepresentation visualRepresentation = element.getVisualRepresentation();
+                if  (visualRepresentation.getBorder() != null) {
+                    root.add(getBorderRectangle(element), element.getPosition().getX(), element.getPosition().getY());
+                } else {
+                    Rectangle elementUX = new Rectangle(50, 50);
+                    elementUX.setFill(visualRepresentation.getBackground());
+                    root.add(elementUX, element.getPosition().getX(), element.getPosition().getY());
+                }
             }
         }
+    }
 
-
+    private StackPane getBorderRectangle(MapElement element) {
+        Rectangle borderRect = new Rectangle(50, 50);
+        borderRect.setFill(element.getVisualRepresentation().getBorder() != null ?
+                element.getVisualRepresentation().getBorder() :
+                Color.TRANSPARENT);
+        Rectangle innerRect = new Rectangle(40, 40);
+        innerRect.setFill(Color.WHITE);
+        return new StackPane(borderRect, innerRect);
     }
 
     @Override
@@ -55,6 +70,5 @@ public class SimulationView implements SimulationListener {
         Platform.runLater(() -> {
             drawMap(simulation);
         });
-
     }
 }

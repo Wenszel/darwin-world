@@ -11,7 +11,9 @@ public class Plant implements MapElement{
     }
 
     @Override
-    public Color getVisualRepresentation() {
-        return Color.GREEN;
+    public VisualRepresentation getVisualRepresentation() {
+        return new VisualRepresentationBuilder()
+                .setBackground(Color.GREEN)
+                .build();
     }
 }

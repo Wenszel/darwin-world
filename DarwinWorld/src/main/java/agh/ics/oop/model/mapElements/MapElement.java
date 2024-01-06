@@ -5,5 +5,5 @@ import javafx.scene.paint.Color;
 
 public interface MapElement {
     Vector2d getPosition();
-    Color getVisualRepresentation();
+    VisualRepresentation getVisualRepresentation();
 }

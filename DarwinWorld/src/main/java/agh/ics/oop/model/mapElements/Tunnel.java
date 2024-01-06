@@ -22,7 +22,10 @@ public class Tunnel implements MapElement {
     }
 
     @Override
-    public Color getVisualRepresentation() {
-        return Color.BROWN;
+    public VisualRepresentation getVisualRepresentation() {
+        return new VisualRepresentationBuilder()
+                .setBorder(Color.BROWN)
+                .setBorderWidth(5)
+                .build();
     }
 }

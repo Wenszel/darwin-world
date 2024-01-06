@@ -38,8 +38,11 @@ public class Animal implements MapElement {
     }
 
     @Override
-    public Color getVisualRepresentation() {
-        return Color.GRAY;
+    public VisualRepresentation getVisualRepresentation() {
+        return new VisualRepresentationBuilder()
+                .setBackground(Color.GRAY)
+                .setText("A")
+                .build();
     }
 
     public void setPosition(Vector2d position) {
