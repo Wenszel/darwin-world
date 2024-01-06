@@ -28,13 +28,13 @@ public class SimulationView implements SimulationListener {
 
     public void init() {
         HashMap<Parameter, Integer> params = new HashMap<>();
-        params.put(Parameter.MAP_WIDTH, 6);
-        params.put(Parameter.MAP_HEIGHT, 6);
+        params.put(Parameter.MAP_WIDTH, 10);
+        params.put(Parameter.MAP_HEIGHT, 10);
         params.put(Parameter.GENOTYPE_LENGTH, 5);
         params.put(Parameter.MIN_REPRODUCTION_ENERGY, 30);
         params.put(Parameter.REPRODUCTION_ENERGY_COST, 30);
         params.put(Parameter.STARTING_ENERGY, 50);
-        params.put(Parameter.DAILY_ENERGY_COST, 1);
+        params.put(Parameter.DAILY_ENERGY_COST, 4);
         params.put(Parameter.DAILY_PLANTS_GROWTH, 1);
         params.put(Parameter.ENERGY_FROM_PLANT, 5);
 

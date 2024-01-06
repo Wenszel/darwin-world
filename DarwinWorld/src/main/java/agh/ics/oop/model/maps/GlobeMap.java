@@ -46,7 +46,7 @@ public class GlobeMap implements WorldMap {
     private void generateAnimals(){
         //Losujemy mapfields i dajemy do nich zwierzaki (tutaj 2 przykładowe)
         Animal animal = new Animal(new Vector2d(2,2), config);
-        Animal animal2 = new Animal(new Vector2d(1,3), config);
+        Animal animal2 = new Animal(new Vector2d(2,2), config);
 
         mapFields.get(animal.getPosition()).addAnimal(animal);
         animals.add(animal);
@@ -93,6 +93,16 @@ public class GlobeMap implements WorldMap {
                 } else {
                     emptyNormalFields.add(consumedField);
                 }
+            }
+        }
+    }
+    public void removeDeadAnimals() {
+        ListIterator<Animal> iterator = animals.listIterator();
+        while(iterator.hasNext()) {
+            Animal animal = iterator.next();
+            if(animal.getEnergy() <= config.getDailyEnergyCost()) {
+                mapFields.get(animal.getPosition()).removeAnimal(animal);
+                iterator.remove();
             }
         }
     }

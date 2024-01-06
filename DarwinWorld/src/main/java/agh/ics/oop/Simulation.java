@@ -30,10 +30,11 @@ public class Simulation implements Runnable {
         }
     }
     public void runDay() {
+        map.removeDeadAnimals();
         map.moveAnimals();
+        map.consumePlants();
         map.reproduceAnimals();
         map.growPlants();
-        map.consumePlants();
     }
 
     public void addSubscriber(SimulationListener listener) {
