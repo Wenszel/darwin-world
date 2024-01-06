@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.Config.Parameter;
+import agh.ics.oop.model.maps.MapType;
 
 import java.util.HashMap;
 

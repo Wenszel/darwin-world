@@ -4,14 +4,16 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationConfig;
 import agh.ics.oop.model.Config.Parameter;
 import agh.ics.oop.model.SimulationListener;
-import agh.ics.oop.model.mapElements.Animal;
+import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
-import agh.ics.oop.model.maps.GlobeMap;
+import agh.ics.oop.model.mapElements.VisualRepresentation;
+import agh.ics.oop.model.maps.MapType;
 import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -20,7 +22,6 @@ import javafx.scene.text.Text;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class SimulationView implements SimulationListener {
     @FXML
@@ -43,8 +44,9 @@ public class SimulationView implements SimulationListener {
         Thread simulationTask = new Thread(simulation);
         simulationTask.start();
     }
+
     public void drawMap(Simulation simulation) {
-        GlobeMap map = simulation.getMap();
+        WorldMap map = simulation.getMap();
         Map<Vector2d,MapField> mapFields = map.getMapFields();
 
 
@@ -68,15 +70,28 @@ public class SimulationView implements SimulationListener {
                 root.add(stack, x,y);
             }
         }
-        for(MapField field : mapFields.values()) {
-            for(Animal animal : field.getAnimalsOnField()) {
-                Rectangle animalUX = new Rectangle(50, 50);
-                animalUX.setFill(Color.GREEN);
-                root.add(animalUX, animal.getPosition().getX(), animal.getPosition().getY());
+        for(Vector2d position : mapFields.keySet()) {
+            for(MapElement element : map.objectsAt(position)) {
+                VisualRepresentation visualRepresentation = element.getVisualRepresentation();
+                if  (visualRepresentation.getBorder() != null) {
+                    root.add(getBorderRectangle(element), element.getPosition().getX(), element.getPosition().getY());
+                } else {
+                    Rectangle elementUX = new Rectangle(50, 50);
+                    elementUX.setFill(visualRepresentation.getBackground());
+                    root.add(elementUX, element.getPosition().getX(), element.getPosition().getY());
+                }
             }
         }
+    }
 
-
+    private StackPane getBorderRectangle(MapElement element) {
+        Rectangle borderRect = new Rectangle(50, 50);
+        borderRect.setFill(element.getVisualRepresentation().getBorder() != null ?
+                element.getVisualRepresentation().getBorder() :
+                Color.TRANSPARENT);
+        Rectangle innerRect = new Rectangle(40, 40);
+        innerRect.setFill(Color.WHITE);
+        return new StackPane(borderRect, innerRect);
     }
 
     @Override
@@ -85,6 +100,5 @@ public class SimulationView implements SimulationListener {
         Platform.runLater(() -> {
             drawMap(simulation);
         });
-
     }
 }

@@ -6,13 +6,14 @@ import agh.ics.oop.model.utils.Direction;
 import agh.ics.oop.model.utils.Genotype;
 
 import agh.ics.oop.model.utils.Vector2d;
+import javafx.scene.paint.Color;
 
 
 public class Animal implements MapElement {
     private Vector2d position;
     private int energy;
     private final Genotype genotype;
-    private Direction direction;
+    private final Direction direction;
     private final int dailyEnergyCost;
 
     public Animal(Vector2d position, SimulationConfig config) {
@@ -40,6 +41,18 @@ public class Animal implements MapElement {
 
     public Vector2d getPosition() {
         return position;
+    }
+
+    @Override
+    public VisualRepresentation getVisualRepresentation() {
+        return new VisualRepresentationBuilder()
+                .setBackground(Color.RED)
+                .setText("A")
+                .build();
+    }
+
+    public void setPosition(Vector2d position) {
+        this.position = position;
     }
 
     public int getEnergy() {

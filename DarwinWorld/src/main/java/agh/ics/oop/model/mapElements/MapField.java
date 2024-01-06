@@ -12,7 +12,7 @@ public class MapField {
     private LinkedList<Animal> animalsOnField = new LinkedList();
     private boolean isPreferred;
     private final Vector2d fieldPosition;
-
+    private Plant plant;
     private boolean hasPlant = false;
 
     public MapField(Vector2d pos, SimulationConfig config, boolean isPreferred) {
@@ -33,6 +33,14 @@ public class MapField {
         return Collections.unmodifiableList(animalsOnField);
     }
 
+    public List<MapElement> getElementsOnField() {
+        List<MapElement> elements = new LinkedList<>(getAnimalsOnField());
+        if (plant != null) {
+            elements.add(plant);
+        }
+        return elements;
+    }
+
     public boolean isPreferred() {
         return isPreferred;
     }
@@ -43,12 +51,14 @@ public class MapField {
             Animal animal = strongestAnimal.get();
             animal.addEnergy(config.getEnergyFromPlant());
             this.hasPlant = false;
+            this.plant = null;
             return Optional.of(this);
         }
         return Optional.empty();
     }
     public void growPlant() {
         this.hasPlant=true;
+        this.plant = new Plant(fieldPosition);
     }
     public Optional<Animal> reproduceAnimals() {
         if(animalsOnField.size() >= 2) {
@@ -66,11 +76,10 @@ public class MapField {
     }
 
     private List<Animal> findParents() {
-        List<Animal> twoStrongestAnimals = animalsOnField.stream()
+        return animalsOnField.stream()
                 .sorted(new AnimalComparator())
                 .limit(2)
-                .collect(Collectors.toList());
-        return twoStrongestAnimals;
+                .toList();
     }
 
     public boolean getHasPlant() {
