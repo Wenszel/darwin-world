@@ -59,15 +59,7 @@ public class SimulationView implements SimulationListener {
                 } else {
                     rect.setFill(Color.WHITE);
                 }
-                StackPane stack = new StackPane();
-                stack.getChildren().add(rect);
-
-                if(mapFields.get(new Vector2d(x, y)).getHasPlant()) {
-                    Text text = new Text("P");
-                    stack.getChildren().add(text);
-                }
-
-                root.add(stack, x,y);
+                root.add(rect, x,y);
             }
         }
         for(Vector2d position : mapFields.keySet()) {

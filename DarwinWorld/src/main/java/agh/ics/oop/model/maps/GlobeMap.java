@@ -47,7 +47,6 @@ public class GlobeMap implements WorldMap {
         }
     }
     private void generateAnimals(){
-        //Losujemy mapfields i dajemy do nich zwierzaki (tutaj 2 przykładowe)
         Animal animal = new Animal(new Vector2d(2,2), config);
         Animal animal2 = new Animal(new Vector2d(2,2), config);
         mapFields.get(animal.getPosition()).addAnimal(animal);
@@ -87,17 +86,16 @@ public class GlobeMap implements WorldMap {
             }
         }
     }
+
     public void consumePlants() {
         for(MapField field : mapFields.values()) {
-            Optional<MapField> maybeConsumedField = field.consumePlant();
-            if(maybeConsumedField.isPresent()) {
-                MapField consumedField = maybeConsumedField.get();
+            field.consumePlant().ifPresent(consumedField -> {
                 if(consumedField.isPreferred()) {
                     emptyPreferredFields.add(consumedField);
                 } else {
                     emptyNormalFields.add(consumedField);
                 }
-            }
+            });
         }
     }
     public void removeDeadAnimals() {
@@ -118,12 +116,13 @@ public class GlobeMap implements WorldMap {
     }
     private List<Integer> calculatePreferredRows(int width, int height)  {
             int fieldsAmount = width*height;
+            float preferredFieldsCoveragePercentage = 0.2f;
             List<Integer> preferredRows = new LinkedList<>();
             int centralRow = height/2;
             int side = -1;
             int currentRow=centralRow;
             preferredRows.add(centralRow);
-            while(preferredRows.size()*width < fieldsAmount*0.2) {
+            while(preferredRows.size()*width < fieldsAmount*preferredFieldsCoveragePercentage) {
                 int newRow = currentRow+side*preferredRows.size();
                 preferredRows.add(newRow);
                 currentRow=newRow;

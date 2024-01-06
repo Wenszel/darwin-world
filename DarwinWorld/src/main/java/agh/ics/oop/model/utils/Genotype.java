@@ -52,9 +52,7 @@ public class Genotype {
         List<Integer> strongerParentGenotypeList = strongerParent.getGenotype().getGenotypeList();
         List<Integer> weakerParentGenotypeList = weakerParent.getGenotype().getGenotypeList();
         List<Integer> childrenGenotypeList = new ArrayList<>();
-        //TODO
-        //TUTAJ PROBLEM SPLIT POINT OUT OF RANGE, zwierzatka mają minusową energię bo ich nie usuwasz :D
-        int splitPoint = (int) Math.round((strongerParentGenotypeList.size()) * ((double) strongerParent.getEnergy() / totalEnergy));
+        int splitPoint = (int) Math.round(strongerParentGenotypeList.size() * ((double) strongerParent.getEnergy() / totalEnergy));
         Random rand = new Random();
 
         if (rand.nextBoolean()) {
