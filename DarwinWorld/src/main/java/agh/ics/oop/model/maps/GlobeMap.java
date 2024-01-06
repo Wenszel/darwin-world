@@ -1,36 +1,36 @@
 package agh.ics.oop.model.maps;
 
 import agh.ics.oop.model.mapElements.Animal;
+import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
 import agh.ics.oop.model.utils.Vector2d;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.util.*;
 
 public class GlobeMap implements WorldMap {
+    protected final Map<Vector2d, MapField> mapFields = new HashMap<>();
+    protected final List<Animal> animals = new LinkedList<>();
+    protected final int width;
+    protected final int height;
 
-    private final Map<Vector2d, MapField> mapFields = new HashMap<>();
-    private final List<Animal> animals = new LinkedList();
-    private final int width;
-    private final int height;
-    public GlobeMap(int width, int height){
+    public GlobeMap(int width, int height) {
         this.width = width;
         this.height = height;
-        for(int i=0; i<width; i++) {
-            for(int j=0; j<height; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 Vector2d pos = new Vector2d(i,j);
                 mapFields.put(pos, new MapField(pos));
             }
         }
     }
+
+    @Override
     public void initializeMap() {
         //Tutaj będziemy wybierali preferowane pola, początkowe zwierzątka oraz rośliny itp
         generateAnimals();
     }
 
-    private void generateAnimals(){
-        //Losujemy mapfields i dajemy do nich zwierzaki (tutaj 2 przykładowe)
+    protected void generateAnimals(){
         Animal animal = new Animal(new Vector2d(3,3));
         Animal animal2 = new Animal(new Vector2d(3,3));
 
@@ -41,6 +41,8 @@ public class GlobeMap implements WorldMap {
         animals.add(animal2);
 
     }
+
+    @Override
     public void moveAnimals() {
         for(Animal animal : animals) {
             mapFields.get(animal.getPosition()).removeAnimal(animal);
@@ -48,16 +50,22 @@ public class GlobeMap implements WorldMap {
             mapFields.get(animal.getPosition()).addAnimal(animal);
         }
     }
+
+    @Override
     public void reproduceAnimals() {
         for(MapField field : mapFields.values()) {
             Optional<Animal> newAnimal = field.reproduceAnimals();
-            if(newAnimal.isPresent()) {
-                animals.add(newAnimal.get());
-            }
+            newAnimal.ifPresent(animals::add);
         }
     }
+
     public Map<Vector2d, MapField> getMapFields() {
         return mapFields;
+    }
+
+    @Override
+    public List<MapElement> objectsAt(Vector2d position) {
+        return mapFields.get(position).getElementsOnField();
     }
 
     public int getWidth() {

@@ -28,6 +28,14 @@ public class MapField {
         return Collections.unmodifiableList(animalsOnField);
     }
 
+    public List<MapElement> getElementsOnField() {
+        List<MapElement> elements = new LinkedList<>(getAnimalsOnField());
+        if (plant != null) {
+            elements.add(plant);
+        }
+        return elements;
+    }
+
     public void consumePlant() {
 
     }
@@ -44,10 +52,9 @@ public class MapField {
     }
 
     private List<Animal> findParents() {
-        List<Animal> twoStrongestAnimals = animalsOnField.stream()
+        return animalsOnField.stream()
                 .sorted(new AnimalComparator())
                 .limit(2)
-                .collect(Collectors.toList());
-        return twoStrongestAnimals;
+                .toList();
     }
 }

@@ -3,6 +3,8 @@ package agh.ics.oop;
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.maps.GlobeMap;
+import agh.ics.oop.model.maps.MapFactory;
+import agh.ics.oop.model.maps.MapType;
 import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.utils.Vector2d;
 
@@ -12,9 +14,9 @@ import java.util.List;
 public class Simulation implements Runnable {
 
     private final List<SimulationListener>  listeners = new ArrayList<>();
-    private final GlobeMap map;
-    public Simulation(GlobeMap map) {
-        this.map = map;
+    private final WorldMap map;
+    public Simulation(MapType mapType) {
+        map = MapFactory.createMap(mapType, 10, 10);
     }
     @Override
     public void run() {
@@ -45,7 +47,7 @@ public class Simulation implements Runnable {
         }
     }
 
-    public GlobeMap getMap() {
+    public WorldMap getMap() {
         return map;
     }
 
