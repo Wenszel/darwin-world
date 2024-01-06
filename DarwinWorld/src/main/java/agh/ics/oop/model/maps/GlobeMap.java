@@ -5,10 +5,7 @@ import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
 import agh.ics.oop.model.utils.Vector2d;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GlobeMap implements WorldMap {
     protected final Map<Vector2d, MapField> mapFields = new HashMap<>();
@@ -19,9 +16,10 @@ public class GlobeMap implements WorldMap {
     public GlobeMap(int width, int height) {
         this.width = width;
         this.height = height;
-        for(int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++) {
-                mapFields.put(new Vector2d(i,j), new MapField());
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                Vector2d pos = new Vector2d(i,j);
+                mapFields.put(pos, new MapField(pos));
             }
         }
     }
@@ -34,11 +32,14 @@ public class GlobeMap implements WorldMap {
 
     protected void generateAnimals(){
         Animal animal = new Animal(new Vector2d(3,3));
-        Animal animal2 = new Animal(new Vector2d(5,7));
+        Animal animal2 = new Animal(new Vector2d(3,3));
+
         mapFields.get(animal.getPosition()).addAnimal(animal);
         animals.add(animal);
+
         mapFields.get(animal2.getPosition()).addAnimal(animal2);
         animals.add(animal2);
+
     }
 
     @Override
@@ -51,6 +52,13 @@ public class GlobeMap implements WorldMap {
     }
 
     @Override
+    public void reproduceAnimals() {
+        for(MapField field : mapFields.values()) {
+            Optional<Animal> newAnimal = field.reproduceAnimals();
+            newAnimal.ifPresent(animals::add);
+        }
+    }
+
     public Map<Vector2d, MapField> getMapFields() {
         return mapFields;
     }

@@ -14,4 +14,5 @@ public interface WorldMap {
     List<MapElement> objectsAt(Vector2d position);
     int getWidth();
     int getHeight();
+    void reproduceAnimals();
 }
