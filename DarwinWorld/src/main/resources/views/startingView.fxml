@@ -1,10 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.GUI.controllers.StartingView">
-   <children>
-      <Button layoutX="250.0" layoutY="187.0" mnemonicParsing="false" onAction="#onSimulationStartClicked" text="Start simulation" />
-   </children>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefWidth="700" prefHeight="600" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="agh.ics.oop.GUI.controllers.StartingView" fx:id="rootPane">
+   <VBox layoutX="100"
+         layoutY="100"
+         prefWidth="500" prefHeight="400" spacing="10" alignment="CENTER">
+      <HBox alignment="center" spacing="5">
+         <Label text="Map width:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button" userData="#mapWidth" />
+         <TextField fx:id="mapWidth" text="10" />
+         <Button text="+" onAction="#increment" styleClass="action-button" userData="#mapWidth"/>
+      </HBox>
+      <HBox spacing="5" alignment="center">
+         <Label text="Map height:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="mapHeight" text="10"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+
+      <HBox spacing="5" alignment="center">
+         <Label text="Genotype Length:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="genotypeLengthInput" text="5"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+
+      <HBox spacing="5" alignment="center">
+         <Label text="Min Reproduction Energy:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="minReproductionEnergyInput" text="30"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+
+      <HBox spacing="5" alignment="center">
+         <Label text="Reproduction Energy Cost:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button" />
+         <TextField fx:id="reproductionEnergyCostInput" prefWidth="150" text="20"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+
+      <HBox spacing="5" alignment="center">
+         <Label text="Starting Energy:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="startingEnergyInput" prefWidth="150" text="50"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+
+      <HBox spacing="5" alignment="center">
+         <Label text="Daily Energy Cost:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="dailyEnergyCostInput" prefWidth="150" text="10"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+
+      <HBox spacing="5" alignment="center">
+         <Label text="Daily Plants Growth:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="dailyPlantsGrowthInput" prefWidth="150" text="5"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+
+      <HBox spacing="5" alignment="center">
+         <Label text="Energy from Plant:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="energyFromPlantInput" prefWidth="150" text="10"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+      <Button mnemonicParsing="false" onAction="#onSimulationStartClicked" text="Start simulation" styleClass="confirm-button"/>
+   </VBox>
 </AnchorPane>

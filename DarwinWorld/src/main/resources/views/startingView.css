@@ -1,0 +1,45 @@
+#inputs {
+    -fx-padding: 40px 100px 40px 100px;
+    -fx-border-width: 2px;
+    -fx-border-color: white;
+    -fx-border-radius: 50px;
+}
+.text-field {
+    -fx-background-color: #F9F9FF;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-pref-width: 50px;
+    -fx-pref-height: 20px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+    -fx-padding: 5px;
+    -fx-text-alignment: center;
+}
+.h-box{
+   -fx-pref-width: 400px;
+}
+.label {
+    -fx-pref-width: 200px;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+.button {
+    -fx-background-color: #77CAEE;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+}
+.button:hover {
+    -fx-background-color: #3FA6D2;
+}
+.confirm-button {
+    -fx-background-color: #3FA6DC;
+}
+.confirm-button:hover{
+    -fx-background-color: #1E85B0;
+}
+.action-button {
+    -fx-pref-width: 40px;
+    -fx-pref-height: 20px;
+}
