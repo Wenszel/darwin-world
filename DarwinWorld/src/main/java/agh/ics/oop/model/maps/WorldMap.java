@@ -15,4 +15,7 @@ public interface WorldMap {
     int getWidth();
     int getHeight();
     void reproduceAnimals();
+    void removeDeadAnimals();
+    void consumePlants();
+    void growPlants();
 }

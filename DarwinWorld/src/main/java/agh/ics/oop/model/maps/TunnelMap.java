@@ -1,5 +1,6 @@
 package agh.ics.oop.model.maps;
 
+import agh.ics.oop.SimulationConfig;
 import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
@@ -9,10 +10,10 @@ import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.*;
 
-public class TunnelMap extends GlobeMap implements WorldMap{
+public class TunnelMap extends GlobeMap {
     private final List<Tunnel> tunnels = new ArrayList<>();
-    public TunnelMap(int width, int height) {
-       super(width, height);
+    public TunnelMap(SimulationConfig config) {
+       super(config);
     }
 
     @Override

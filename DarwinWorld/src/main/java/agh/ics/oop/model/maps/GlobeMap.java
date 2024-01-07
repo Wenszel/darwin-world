@@ -1,5 +1,6 @@
 package agh.ics.oop.model.maps;
 
+import agh.ics.oop.SimulationConfig;
 import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
@@ -12,28 +13,42 @@ public class GlobeMap implements WorldMap {
     protected final List<Animal> animals = new LinkedList<>();
     protected final int width;
     protected final int height;
+    private final SimulationConfig config;
+    private final List<MapField> emptyPreferredFields = new ArrayList<>();
+    private final List<MapField> emptyNormalFields = new ArrayList<>();
 
-    public GlobeMap(int width, int height) {
-        this.width = width;
-        this.height = height;
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                Vector2d pos = new Vector2d(i,j);
-                mapFields.put(pos, new MapField(pos));
-            }
-        }
+    public GlobeMap(SimulationConfig config){
+        this.config = config;
+        this.width = config.getMapWidth();
+        this.height = config.getMapHeight();
+
     }
 
     @Override
     public void initializeMap() {
         //Tutaj będziemy wybierali preferowane pola, początkowe zwierzątka oraz rośliny itp
+        createFields();
         generateAnimals();
     }
-
-    protected void generateAnimals(){
-        Animal animal = new Animal(new Vector2d(3,3));
-        Animal animal2 = new Animal(new Vector2d(3,3));
-
+    private void createFields() {
+        List<Integer> preferredRows = calculatePreferredRows(width, height);
+        for(int j=0; j<height; j++) {
+            boolean isRowPreferred = preferredRows.contains(j);
+            for(int i=0; i<width; i++) {
+                Vector2d pos = new Vector2d(i,j);
+                MapField field = new MapField(pos, config, isRowPreferred);
+                mapFields.put(pos, field);
+                if(isRowPreferred) {
+                    emptyPreferredFields.add(field);
+                } else {
+                    emptyNormalFields.add(field);
+                }
+            }
+        }
+    }
+    private void generateAnimals(){
+        Animal animal = new Animal(new Vector2d(2,2), config);
+        Animal animal2 = new Animal(new Vector2d(2,2), config);
         mapFields.get(animal.getPosition()).addAnimal(animal);
         animals.add(animal);
 
@@ -58,7 +73,63 @@ public class GlobeMap implements WorldMap {
             newAnimal.ifPresent(animals::add);
         }
     }
+    public void growPlants() {
+        Random rand = new Random();
+        for(int i=0; i<config.getDailyPlantsGrowth(); i++) {
+            boolean choosePreferredField = rand.nextInt(5) != 0;
+            if(choosePreferredField && emptyPreferredFields.size()>0) {
+                findRandomFieldAndGrow(emptyPreferredFields);
+            } else {
+                if(emptyNormalFields.size() > 0) {
+                    findRandomFieldAndGrow(emptyNormalFields);
+                }
+            }
+        }
+    }
 
+    public void consumePlants() {
+        for(MapField field : mapFields.values()) {
+            field.consumePlant().ifPresent(consumedField -> {
+                if(consumedField.isPreferred()) {
+                    emptyPreferredFields.add(consumedField);
+                } else {
+                    emptyNormalFields.add(consumedField);
+                }
+            });
+        }
+    }
+    public void removeDeadAnimals() {
+        ListIterator<Animal> iterator = animals.listIterator();
+        while(iterator.hasNext()) {
+            Animal animal = iterator.next();
+            if(animal.getEnergy() <= config.getDailyEnergyCost()) {
+                mapFields.get(animal.getPosition()).removeAnimal(animal);
+                iterator.remove();
+            }
+        }
+    }
+    private void findRandomFieldAndGrow(List<MapField> fields) {
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(fields.size());
+        MapField chosenField = fields.remove(randomIndex);
+        chosenField.growPlant();
+    }
+    private List<Integer> calculatePreferredRows(int width, int height)  {
+            int fieldsAmount = width*height;
+            float preferredFieldsCoveragePercentage = 0.2f;
+            List<Integer> preferredRows = new LinkedList<>();
+            int centralRow = height/2;
+            int side = -1;
+            int currentRow=centralRow;
+            preferredRows.add(centralRow);
+            while(preferredRows.size()*width < fieldsAmount*preferredFieldsCoveragePercentage) {
+                int newRow = currentRow+side*preferredRows.size();
+                preferredRows.add(newRow);
+                currentRow=newRow;
+                side*=-1;
+            }
+            return preferredRows;
+    }
     public Map<Vector2d, MapField> getMapFields() {
         return mapFields;
     }

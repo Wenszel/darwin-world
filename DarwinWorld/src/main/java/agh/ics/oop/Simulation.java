@@ -15,8 +15,10 @@ public class Simulation implements Runnable {
 
     private final List<SimulationListener>  listeners = new ArrayList<>();
     private final WorldMap map;
-    public Simulation(MapType mapType) {
-        map = MapFactory.createMap(mapType, 10, 10);
+    private final SimulationConfig config;
+    public Simulation(SimulationConfig config) {
+        this.config = config;
+        this.map = MapFactory.createMap(MapType.GLOBE, config);
     }
     @Override
     public void run() {
@@ -25,13 +27,16 @@ public class Simulation implements Runnable {
             runDay();
             mapChanged("Day ended");
             try {
-                Thread.sleep(2000);
+                Thread.sleep(100);
             } catch(InterruptedException err) {}
         }
     }
     public void runDay() {
+        map.removeDeadAnimals();
         map.moveAnimals();
+        map.consumePlants();
         map.reproduceAnimals();
+        map.growPlants();
     }
 
     public void addSubscriber(SimulationListener listener) {

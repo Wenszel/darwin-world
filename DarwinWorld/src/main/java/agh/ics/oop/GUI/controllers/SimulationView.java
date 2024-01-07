@@ -1,6 +1,8 @@
 package agh.ics.oop.GUI.controllers;
 
 import agh.ics.oop.Simulation;
+import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.Config.Parameter;
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
@@ -12,17 +14,32 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SimulationView implements SimulationListener {
-    private final int SIZE = 10;
     @FXML
     private GridPane root;
 
     public void init() {
-        Simulation simulation = new Simulation(MapType.TUNNEL);
+        HashMap<Parameter, Integer> params = new HashMap<>();
+        params.put(Parameter.MAP_WIDTH, 10);
+        params.put(Parameter.MAP_HEIGHT, 10);
+        params.put(Parameter.GENOTYPE_LENGTH, 5);
+        params.put(Parameter.MIN_REPRODUCTION_ENERGY, 30);
+        params.put(Parameter.REPRODUCTION_ENERGY_COST, 30);
+        params.put(Parameter.STARTING_ENERGY, 50);
+        params.put(Parameter.DAILY_ENERGY_COST, 4);
+        params.put(Parameter.DAILY_PLANTS_GROWTH, 1);
+        params.put(Parameter.ENERGY_FROM_PLANT, 5);
+
+        Simulation simulation = new Simulation(new SimulationConfig(params));
         simulation.addSubscriber(this);
         Thread simulationTask = new Thread(simulation);
         simulationTask.start();
@@ -32,12 +49,17 @@ public class SimulationView implements SimulationListener {
         WorldMap map = simulation.getMap();
         Map<Vector2d,MapField> mapFields = map.getMapFields();
 
-        for (int y = 0; y < map.getWidth(); y++) {
-            for (int x = 0; x < map.getHeight(); x++) {
+
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
                 Rectangle rect = new Rectangle(50, 50);
                 rect.setStroke(Color.BLACK);
-                rect.setFill(Color.WHITE);
-                root.add(rect, x, y);
+                if(mapFields.get(new Vector2d(x, y)).isPreferred()) {
+                    rect.setFill(Color.GRAY);
+                } else {
+                    rect.setFill(Color.WHITE);
+                }
+                root.add(rect, x,y);
             }
         }
         for(Vector2d position : mapFields.keySet()) {
