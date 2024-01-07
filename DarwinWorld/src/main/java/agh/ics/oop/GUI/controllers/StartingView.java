@@ -10,9 +10,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class StartingView {
     @FXML private AnchorPane rootPane;
@@ -25,7 +30,8 @@ public class StartingView {
     @FXML private TextField dailyEnergyCostInput;
     @FXML private TextField dailyPlantsGrowthInput;
     @FXML private TextField energyFromPlantInput;
-
+    @FXML private Button loadFromCSVButton;
+    @FXML private Button saveToCSVButton;
     public void init() {
         Image backgroundImage = new Image("/images/background.jpg");
         BackgroundImage background = new BackgroundImage(backgroundImage,
@@ -47,6 +53,100 @@ public class StartingView {
         SimulationView simulationController = loader.getController();
         SimulationConfig config = createConfigFromInputs();
         simulationController.init(config);
+    }
+    @FXML
+    private void load() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load from CSV");
+        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("CSV files", "*.csv");
+        fileChooser.getExtensionFilters().add(csvFilter);
+
+        File selectedFile = fileChooser.showOpenDialog(loadFromCSVButton.getScene().getWindow());
+
+        if (selectedFile != null) {
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                            new FileInputStream(selectedFile), StandardCharsets.UTF_8))){
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] values = line.split(";");
+                    switch (values[0]) {
+                        case "MAP_WIDTH":
+                            mapWidth.setText(values[1]);
+                            break;
+                        case "MAP_HEIGHT":
+                            mapHeight.setText(values[1]);
+                            break;
+                        case "GENOTYPE_LENGTH":
+                            genotypeLengthInput.setText(values[1]);
+                            break;
+                        case "MIN_REPRODUCTION_ENERGY":
+                            minReproductionEnergyInput.setText(values[1]);
+                            break;
+                        case "REPRODUCTION_ENERGY_COST":
+                            reproductionEnergyCostInput.setText(values[1]);
+                            break;
+                        case "STARTING_ENERGY":
+                            startingEnergyInput.setText(values[1]);
+                            break;
+                        case "DAILY_ENERGY_COST":
+                            dailyEnergyCostInput.setText(values[1]);
+                            break;
+                        case "DAILY_PLANTS_GROWTH":
+                            dailyPlantsGrowthInput.setText(values[1]);
+                            break;
+                        case "ENERGY_FROM_PLANT":
+                            energyFromPlantInput.setText(values[1]);
+                            break;
+                        default:
+                            System.out.println("Unknown param: " + values[0]);
+                            break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private void save() {
+        List<String> lines = getStrings();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save to CSV");
+        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("CSV Files", "*.csv");
+        fileChooser.getExtensionFilters().add(csvFilter);
+
+        File selectedFile = fileChooser.showSaveDialog(saveToCSVButton.getScene().getWindow());
+
+        if (selectedFile != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+                System.out.println("Saved " + selectedFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private List<String> getStrings() {
+        String mapWidthValue = "MAP_WIDTH;" + mapWidth.getText();
+        String mapHeightValue = "MAP_HEIGHT;" + mapHeight.getText();
+        String genotypeLengthValue = "GENOTYPE_LENGTH;" + genotypeLengthInput.getText();
+        String minReproductionEnergyValue = "MIN_REPRODUCTION_ENERGY;" + minReproductionEnergyInput.getText();
+        String reproductionEnergyCostValue = "REPRODUCTION_ENERGY_COST;" + reproductionEnergyCostInput.getText();
+        String startingEnergyValue = "STARTING_ENERGY;" + startingEnergyInput.getText();
+        String dailyEnergyCostValue = "DAILY_ENERGY_COST;" + dailyEnergyCostInput.getText();
+        String dailyPlantsGrowthValue = "DAILY_PLANTS_GROWTH;" + dailyPlantsGrowthInput.getText();
+        String energyFromPlantValue = "ENERGY_FROM_PLANT;" + energyFromPlantInput.getText();
+
+        List<String> lines = Arrays.asList(mapWidthValue, mapHeightValue, genotypeLengthValue, minReproductionEnergyValue,
+                reproductionEnergyCostValue, startingEnergyValue, dailyEnergyCostValue, dailyPlantsGrowthValue, energyFromPlantValue);
+        return lines;
     }
 
     @FXML
@@ -91,7 +191,7 @@ public class StartingView {
             int energyFromPlant = Integer.parseInt(energyFromPlantInput.getText());
             params.put(Parameter.ENERGY_FROM_PLANT, energyFromPlant);
         } catch (NumberFormatException e) {
-            System.out.println("Proszę wprowadzić prawidłowe liczby całkowite.");
+            System.out.println("Incorrect values");
         }
         return new SimulationConfig(params);
     }
