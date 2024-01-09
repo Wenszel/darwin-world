@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -57,10 +58,10 @@ public class StartingView {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("views/simulationView.fxml"));
-        Scene scene = new Scene(loader.load(), 1000, 800);
+        Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
-
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
 
         SimulationView simulationController = loader.getController();
