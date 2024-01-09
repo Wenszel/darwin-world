@@ -18,7 +18,7 @@ public class Simulation implements Runnable {
     private final SimulationConfig config;
     public Simulation(SimulationConfig config) {
         this.config = config;
-        this.map = MapFactory.createMap(MapType.TUNNEL, config);
+        this.map = MapFactory.createMap(config);
     }
     @Override
     public void run() {

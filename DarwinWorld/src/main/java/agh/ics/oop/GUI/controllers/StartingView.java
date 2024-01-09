@@ -2,9 +2,11 @@ package agh.ics.oop.GUI.controllers;
 
 import agh.ics.oop.SimulationConfig;
 import agh.ics.oop.model.Config.Parameter;
+import agh.ics.oop.model.maps.MapType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -23,6 +25,7 @@ public class StartingView {
     @FXML private AnchorPane rootPane;
     @FXML private TextField mapWidth;
     @FXML private TextField mapHeight;
+    @FXML private ComboBox<String> mapType;
     @FXML private TextField genotypeLengthInput;
     @FXML private TextField minReproductionEnergyInput;
     @FXML private TextField reproductionEnergyCostInput;
@@ -38,6 +41,9 @@ public class StartingView {
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
                 BackgroundSize.DEFAULT);
         rootPane.setBackground(new Background(background));
+        for (MapType type : MapType.values()) {
+            mapType.getItems().add(type.toString());
+        }
     }
 
     public void onSimulationStartClicked() throws Exception {
@@ -76,6 +82,9 @@ public class StartingView {
                             break;
                         case "MAP_HEIGHT":
                             mapHeight.setText(values[1]);
+                            break;
+                        case "MAP_TYPE":
+                            mapType.setValue(values[1]);
                             break;
                         case "GENOTYPE_LENGTH":
                             genotypeLengthInput.setText(values[1]);
@@ -136,6 +145,7 @@ public class StartingView {
     private List<String> getStrings() {
         String mapWidthValue = "MAP_WIDTH;" + mapWidth.getText();
         String mapHeightValue = "MAP_HEIGHT;" + mapHeight.getText();
+        String mapTypeValue = "MAP_TYPE;" + mapType.getValue();
         String genotypeLengthValue = "GENOTYPE_LENGTH;" + genotypeLengthInput.getText();
         String minReproductionEnergyValue = "MIN_REPRODUCTION_ENERGY;" + minReproductionEnergyInput.getText();
         String reproductionEnergyCostValue = "REPRODUCTION_ENERGY_COST;" + reproductionEnergyCostInput.getText();
@@ -144,7 +154,7 @@ public class StartingView {
         String dailyPlantsGrowthValue = "DAILY_PLANTS_GROWTH;" + dailyPlantsGrowthInput.getText();
         String energyFromPlantValue = "ENERGY_FROM_PLANT;" + energyFromPlantInput.getText();
 
-        List<String> lines = Arrays.asList(mapWidthValue, mapHeightValue, genotypeLengthValue, minReproductionEnergyValue,
+        List<String> lines = Arrays.asList(mapWidthValue, mapHeightValue,mapTypeValue, genotypeLengthValue, minReproductionEnergyValue,
                 reproductionEnergyCostValue, startingEnergyValue, dailyEnergyCostValue, dailyPlantsGrowthValue, energyFromPlantValue);
         return lines;
     }
@@ -170,26 +180,18 @@ public class StartingView {
 
 
     private SimulationConfig createConfigFromInputs() {
-        HashMap<Parameter, Integer> params = new HashMap<>();
+        HashMap<Parameter, String> params = new HashMap<>();
         try {
-            int width = Integer.parseInt(mapWidth.getText());
-            params.put(Parameter.MAP_WIDTH, width);
-            int height = Integer.parseInt(mapHeight.getText());
-            params.put(Parameter.MAP_HEIGHT, height);
-            int genotypeLength = Integer.parseInt(genotypeLengthInput.getText());
-            params.put(Parameter.GENOTYPE_LENGTH, genotypeLength);
-            int minReproductionEnergy = Integer.parseInt(minReproductionEnergyInput.getText());
-            params.put(Parameter.MIN_REPRODUCTION_ENERGY, minReproductionEnergy);
-            int reproductionEnergyCost = Integer.parseInt(reproductionEnergyCostInput.getText());
-            params.put(Parameter.REPRODUCTION_ENERGY_COST, reproductionEnergyCost);
-            int startingEnergy = Integer.parseInt(startingEnergyInput.getText());
-            params.put(Parameter.STARTING_ENERGY, startingEnergy);
-            int dailyEnergyCost = Integer.parseInt(dailyEnergyCostInput.getText());
-            params.put(Parameter.DAILY_ENERGY_COST, dailyEnergyCost);
-            int dailyPlantsGrowth = Integer.parseInt(dailyPlantsGrowthInput.getText());
-            params.put(Parameter.DAILY_PLANTS_GROWTH, dailyPlantsGrowth);
-            int energyFromPlant = Integer.parseInt(energyFromPlantInput.getText());
-            params.put(Parameter.ENERGY_FROM_PLANT, energyFromPlant);
+            params.put(Parameter.MAP_WIDTH, mapWidth.getText());
+            params.put(Parameter.MAP_HEIGHT, mapHeight.getText());
+            params.put(Parameter.MAP_TYPE, mapType.getValue());
+            params.put(Parameter.GENOTYPE_LENGTH, genotypeLengthInput.getText());
+            params.put(Parameter.MIN_REPRODUCTION_ENERGY, minReproductionEnergyInput.getText());
+            params.put(Parameter.REPRODUCTION_ENERGY_COST, reproductionEnergyCostInput.getText());
+            params.put(Parameter.STARTING_ENERGY, startingEnergyInput.getText());
+            params.put(Parameter.DAILY_ENERGY_COST, dailyEnergyCostInput.getText());
+            params.put(Parameter.DAILY_PLANTS_GROWTH, dailyPlantsGrowthInput.getText());
+            params.put(Parameter.ENERGY_FROM_PLANT, energyFromPlantInput.getText());
         } catch (NumberFormatException e) {
             System.out.println("Incorrect values");
         }
