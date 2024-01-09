@@ -8,6 +8,7 @@
 
 <?import javafx.scene.layout.HBox?>
 
+<?import javafx.scene.control.ComboBox?>
 <AnchorPane prefWidth="700" prefHeight="600" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="agh.ics.oop.GUI.controllers.StartingView" fx:id="rootPane">
    <Button text="Load from CSV" onAction="#load" styleClass="confirm-button" fx:id="loadFromCSVButton"/>
@@ -28,7 +29,10 @@
          <TextField fx:id="mapHeight" text="10"/>
          <Button text="+" onAction="#increment" styleClass="action-button"/>
       </HBox>
-
+      <HBox spacing="5" alignment="center">
+         <Label text="Map type:"/>
+         <ComboBox fx:id="mapType" />
+      </HBox>
       <HBox spacing="5" alignment="center">
          <Label text="Genotype Length:"/>
          <Button text="-" onAction="#decrement" styleClass="action-button"/>
