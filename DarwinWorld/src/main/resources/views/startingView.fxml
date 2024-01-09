@@ -34,9 +34,25 @@
          <ComboBox fx:id="mapType" />
       </HBox>
       <HBox spacing="5" alignment="center">
+         <Label text="Mutation variant:"/>
+         <ComboBox fx:id="mutationVariant" />
+      </HBox>
+      <HBox spacing="5" alignment="center">
          <Label text="Genotype Length:"/>
          <Button text="-" onAction="#decrement" styleClass="action-button"/>
          <TextField fx:id="genotypeLengthInput" text="5"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+      <HBox spacing="5" alignment="center">
+         <Label text="Max mutations:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="maxMutationsInput" text="5"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+      <HBox spacing="5" alignment="center">
+         <Label text="Min mutations:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="minMutationsInput" text="5"/>
          <Button text="+" onAction="#increment" styleClass="action-button"/>
       </HBox>
 

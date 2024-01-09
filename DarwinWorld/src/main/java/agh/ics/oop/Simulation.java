@@ -1,12 +1,8 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.SimulationListener;
-import agh.ics.oop.model.mapElements.Animal;
-import agh.ics.oop.model.maps.GlobeMap;
-import agh.ics.oop.model.maps.MapFactory;
-import agh.ics.oop.model.maps.MapType;
+import agh.ics.oop.model.factories.MapFactory;
 import agh.ics.oop.model.maps.WorldMap;
-import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.ArrayList;
 import java.util.List;
