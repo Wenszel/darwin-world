@@ -1,6 +1,9 @@
-package agh.ics.oop.model.maps;
+package agh.ics.oop.model.factories;
 
 import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.maps.GlobeMap;
+import agh.ics.oop.model.maps.TunnelMap;
+import agh.ics.oop.model.maps.WorldMap;
 
 public class MapFactory {
     public static WorldMap createMap(SimulationConfig config) {

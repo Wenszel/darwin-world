@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.Config.Parameter;
+import agh.ics.oop.model.Config.variants.MutationVariantName;
 import agh.ics.oop.model.maps.MapType;
 
 import java.util.HashMap;
@@ -10,7 +11,10 @@ public class SimulationConfig {
     private final int mapWidth;
     private final int mapHeight;
     private final MapType mapType;
+    private final MutationVariantName mutationVariant;
     private final int genotypeLength;
+    private final int minMutations;
+    private final int maxMutations;
     private final int  minReproductionEnergy;
     private final int reproductionCost;
     private final int  startingEnergy;
@@ -23,7 +27,10 @@ public class SimulationConfig {
         this.mapWidth =  Integer.parseInt(params.get(Parameter.MAP_WIDTH));
         this.mapHeight = Integer.parseInt(params.get(Parameter.MAP_HEIGHT));
         this.mapType = MapType.valueOf(params.get(Parameter.MAP_TYPE));
+        this.mutationVariant = MutationVariantName.valueOf(params.get(Parameter.MUTATION_TYPE));
         this.genotypeLength = Integer.parseInt(params.get(Parameter.GENOTYPE_LENGTH));
+        this.minMutations = Integer.parseInt(params.get(Parameter.MIN_MUTATIONS));
+        this.maxMutations = Integer.parseInt(params.get(Parameter.MAX_MUTATIONS));
         this.minReproductionEnergy = Integer.parseInt(params.get(Parameter.MIN_REPRODUCTION_ENERGY));
         this.reproductionCost = Integer.parseInt(params.get(Parameter.REPRODUCTION_ENERGY_COST));
         this.startingEnergy = Integer.parseInt(params.get(Parameter.STARTING_ENERGY));
@@ -45,8 +52,20 @@ public class SimulationConfig {
         return mapType;
     }
 
+    public MutationVariantName getMutationVariant() {
+        return mutationVariant;
+    }
+
     public int getGenotypeLength() {
         return genotypeLength;
+    }
+
+    public int getMinMutations() {
+        return minMutations;
+    }
+
+    public int getMaxMutations() {
+        return maxMutations;
     }
 
     public int getMinReproductionEnergy() {
