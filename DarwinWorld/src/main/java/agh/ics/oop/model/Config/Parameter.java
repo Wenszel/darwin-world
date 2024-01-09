@@ -3,7 +3,11 @@ package agh.ics.oop.model.Config;
 public enum Parameter {
     MAP_WIDTH,
     MAP_HEIGHT,
+    MAP_TYPE,
+    MUTATION_TYPE,
     GENOTYPE_LENGTH,
+    MIN_MUTATIONS,
+    MAX_MUTATIONS,
     MIN_REPRODUCTION_ENERGY,
     REPRODUCTION_ENERGY_COST,
     STARTING_ENERGY,

@@ -1,6 +1,9 @@
 package agh.ics.oop.model.utils;
 
 
+import agh.ics.oop.model.Config.variants.MutationVariant;
+import agh.ics.oop.model.Config.variants.MutationVariantName;
+import agh.ics.oop.model.factories.MutationVariantFactory;
 import agh.ics.oop.model.mapElements.Animal;
 
 import java.util.ArrayList;
@@ -23,13 +26,14 @@ public class Genotype {
         currentGeneIndex = rand.nextInt(length);
     }
 
-    public Genotype(int length, Animal strongerParent, Animal weakerParent, int minMutations, int maxMutations) {
+    public Genotype(int length, Animal strongerParent, Animal weakerParent, int minMutations, int maxMutations, MutationVariantName mutationVariantName) {
         this.length = length;
         this.maxMutations = maxMutations;
         this.minMutations = minMutations;
+        MutationVariant mutationVariant = MutationVariantFactory.createMutationVariant(mutationVariantName);
         Random rand = new Random();
         currentGeneIndex = rand.nextInt(length);
-        genotype.addAll(generateNewGenotype(strongerParent, weakerParent));
+        genotype.addAll(generateNewGenotype(strongerParent, weakerParent, mutationVariant));
     }
 
     public int getCurrentGene() {
@@ -41,7 +45,7 @@ public class Genotype {
     public List<Integer> getGenotypeList() {
         return genotype;
     }
-    private List<Integer> generateNewGenotype(Animal strongerParent, Animal weakerParent) {
+    private List<Integer> generateNewGenotype(Animal strongerParent, Animal weakerParent, MutationVariant mutationVariant) {
         int totalEnergy = strongerParent.getEnergy() + weakerParent.getEnergy();
         AnimalComparator comparator = new AnimalComparator();
         if(comparator.compare(strongerParent, weakerParent) < 1) {
@@ -62,15 +66,8 @@ public class Genotype {
             childrenGenotypeList.addAll(weakerParentGenotypeList.subList(0, splitPoint));
             childrenGenotypeList.addAll(strongerParentGenotypeList.subList(splitPoint, length));
         }
-        mutate(childrenGenotypeList);
+        mutationVariant.mutate(childrenGenotypeList, minMutations, maxMutations);
         return childrenGenotypeList;
     }
 
-    private void mutate(List<Integer> genotypeList) {
-        Random rand = new Random();
-        int mutationsAmount = rand.nextInt(maxMutations - minMutations + 1);
-        for(int i=0; i<mutationsAmount; i++) {
-            genotypeList.set(rand.nextInt(length), rand.nextInt(8));
-        }
-    }
 }

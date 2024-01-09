@@ -28,7 +28,7 @@ public class Animal implements MapElement {
         this.direction = new Direction();
         this.position = position;
         this.energy = 2*config.getReproductionCost();
-        this.genotype = new Genotype(config.getGenotypeLength(), strongerParent, weakerParent, 0, 8);
+        this.genotype = new Genotype(config.getGenotypeLength(), strongerParent, weakerParent, config.getMinMutations(), config.getMaxMutations(), config.getMutationVariant());
         this.dailyEnergyCost = config.getDailyEnergyCost();
     }
 
