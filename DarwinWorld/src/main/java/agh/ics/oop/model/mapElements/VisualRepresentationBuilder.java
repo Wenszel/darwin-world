@@ -1,9 +1,10 @@
 package agh.ics.oop.model.mapElements;
 
+import agh.ics.oop.model.Builder;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class VisualRepresentationBuilder {
+public class VisualRepresentationBuilder implements Builder<VisualRepresentation> {
     private Color background;
     private Color border;
     private String text;
@@ -34,7 +35,7 @@ public class VisualRepresentationBuilder {
         this.borderWidth = borderWidth;
         return this;
     }
-
+    @Override
     public VisualRepresentation build() {
         VisualRepresentation visualRepresentation = new VisualRepresentation();
         visualRepresentation.setBackground(background);

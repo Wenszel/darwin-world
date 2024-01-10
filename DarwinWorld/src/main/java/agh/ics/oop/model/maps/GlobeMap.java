@@ -4,6 +4,7 @@ import agh.ics.oop.SimulationConfig;
 import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
+import agh.ics.oop.model.stats.AnimalStatistics;
 import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.*;
@@ -104,6 +105,7 @@ public class GlobeMap implements WorldMap {
             Animal animal = iterator.next();
             if(animal.getEnergy() <= config.getDailyEnergyCost()) {
                 mapFields.get(animal.getPosition()).removeAnimal(animal);
+                animal.kill();
                 iterator.remove();
             }
         }
