@@ -55,7 +55,18 @@
          <TextField fx:id="minMutationsInput" text="5"/>
          <Button text="+" onAction="#increment" styleClass="action-button"/>
       </HBox>
-
+      <HBox spacing="5" alignment="center">
+         <Label text="Starting plants:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="startingPlantsInput" text="5"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
+      <HBox spacing="5" alignment="center">
+         <Label text="Starting animals:"/>
+         <Button text="-" onAction="#decrement" styleClass="action-button"/>
+         <TextField fx:id="startingAnimalsInput" text="5"/>
+         <Button text="+" onAction="#increment" styleClass="action-button"/>
+      </HBox>
       <HBox spacing="5" alignment="center">
          <Label text="Min Reproduction Energy:"/>
          <Button text="-" onAction="#decrement" styleClass="action-button"/>

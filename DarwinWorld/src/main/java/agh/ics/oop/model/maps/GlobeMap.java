@@ -28,7 +28,8 @@ public class GlobeMap implements WorldMap {
     public void initializeMap() {
         //Tutaj będziemy wybierali preferowane pola, początkowe zwierzątka oraz rośliny itp
         createFields();
-        generateAnimals();
+        growPlants(config.getStartingPlants());
+        generateAnimals(config.getStartingAnimals());
     }
     private void createFields() {
         List<Integer> preferredRows = calculatePreferredRows(width, height);
@@ -46,15 +47,13 @@ public class GlobeMap implements WorldMap {
             }
         }
     }
-    private void generateAnimals(){
-        Animal animal = new Animal(new Vector2d(2,2), config);
-        Animal animal2 = new Animal(new Vector2d(2,2), config);
-        mapFields.get(animal.getPosition()).addAnimal(animal);
-        animals.add(animal);
-
-        mapFields.get(animal2.getPosition()).addAnimal(animal2);
-        animals.add(animal2);
-
+    private void generateAnimals(int amount){
+        for(int i=0; i<amount; i++) {
+            Vector2d position = Vector2d.getRandomVector(config.getMapWidth(), config.getMapHeight());
+            Animal animal = new Animal(position, config);
+            mapFields.get(position).addAnimal(animal);
+            animals.add(animal);
+        }
     }
 
     @Override
@@ -73,9 +72,10 @@ public class GlobeMap implements WorldMap {
             newAnimal.ifPresent(animals::add);
         }
     }
-    public void growPlants() {
+    @Override
+    public void growPlants(int amount) {
         Random rand = new Random();
-        for(int i=0; i<config.getDailyPlantsGrowth(); i++) {
+        for(int i=0; i<amount; i++) {
             boolean choosePreferredField = rand.nextInt(5) != 0;
             if(choosePreferredField && emptyPreferredFields.size()>0) {
                 findRandomFieldAndGrow(emptyPreferredFields);

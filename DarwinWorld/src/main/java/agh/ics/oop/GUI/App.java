@@ -15,7 +15,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("views/startingView.fxml"));
-        Scene scene = new Scene(loader.load(), 700, 750);
+        Scene scene = new Scene(loader.load(), 700, 900);
         scene.getStylesheets().add("views/startingView.css");
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image("/images/icon.png"));

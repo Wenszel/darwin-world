@@ -17,5 +17,5 @@ public interface WorldMap {
     void reproduceAnimals();
     void removeDeadAnimals();
     void consumePlants();
-    void growPlants();
+    void growPlants(int amount);
 }

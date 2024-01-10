@@ -32,6 +32,8 @@ public class StartingView {
     @FXML private TextField genotypeLengthInput;
     @FXML private TextField maxMutationsInput;
     @FXML private TextField minMutationsInput;
+    @FXML private TextField startingPlantsInput;
+    @FXML private TextField startingAnimalsInput;
     @FXML private TextField minReproductionEnergyInput;
     @FXML private TextField reproductionEnergyCostInput;
     @FXML private TextField startingEnergyInput;
@@ -116,6 +118,12 @@ public class StartingView {
                         case "MIN_MUTATIONS":
                             minMutationsInput.setText(values[1]);
                             break;
+                        case "STARTING_PLANTS":
+                            startingPlantsInput.setText(values[1]);
+                            break;
+                        case "STARTING_ANIMALS":
+                            startingAnimalsInput.setText(values[1]);
+                            break;
                         case "MIN_REPRODUCTION_ENERGY":
                             minReproductionEnergyInput.setText(values[1]);
                             break;
@@ -177,6 +185,8 @@ public class StartingView {
         String mutationVariantValue = "MUTATION_VARIANT;" + mutationVariant.getValue();
         String maxMutationsValue = "MAX_MUTATIONS;" + maxMutationsInput.getText();
         String minMutationsValue = "MIN_MUTATIONS;" + minMutationsInput.getText();
+        String startingPlantsValue = "STARTING_PLANTS;" + startingPlantsInput.getText();
+        String startingAnimalsValue = "STARTING_ANIMALS;" + startingAnimalsInput.getText();
         String minReproductionEnergyValue = "MIN_REPRODUCTION_ENERGY;" + minReproductionEnergyInput.getText();
         String reproductionEnergyCostValue = "REPRODUCTION_ENERGY_COST;" + reproductionEnergyCostInput.getText();
         String startingEnergyValue = "STARTING_ENERGY;" + startingEnergyInput.getText();
@@ -185,7 +195,7 @@ public class StartingView {
         String energyFromPlantValue = "ENERGY_FROM_PLANT;" + energyFromPlantInput.getText();
 
         List<String> lines = Arrays.asList(mapWidthValue, mapHeightValue,mapTypeValue, mutationVariantValue, genotypeLengthValue,
-                maxMutationsValue, minMutationsValue,minReproductionEnergyValue,
+                maxMutationsValue, minMutationsValue,startingPlantsValue, startingAnimalsValue,minReproductionEnergyValue,
                 reproductionEnergyCostValue, startingEnergyValue, dailyEnergyCostValue, dailyPlantsGrowthValue, energyFromPlantValue);
         return lines;
     }
@@ -220,6 +230,8 @@ public class StartingView {
             params.put(Parameter.GENOTYPE_LENGTH, genotypeLengthInput.getText());
             params.put(Parameter.MAX_MUTATIONS, maxMutationsInput.getText());
             params.put(Parameter.MIN_MUTATIONS, minMutationsInput.getText());
+            params.put(Parameter.STARTING_PLANTS, startingPlantsInput.getText());
+            params.put(Parameter.STARTING_ANIMALS, startingAnimalsInput.getText());
             params.put(Parameter.MIN_REPRODUCTION_ENERGY, minReproductionEnergyInput.getText());
             params.put(Parameter.REPRODUCTION_ENERGY_COST, reproductionEnergyCostInput.getText());
             params.put(Parameter.STARTING_ENERGY, startingEnergyInput.getText());

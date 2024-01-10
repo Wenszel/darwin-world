@@ -50,7 +50,6 @@ public class SimulationView implements SimulationListener {
 
         double fieldWidth = mapGrid.getPrefWidth()/map.getWidth();
         double fieldHeight = mapGrid.getPrefHeight()/map.getHeight();
-        System.out.println(fieldWidth + ", " + fieldHeight);
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
                 Rectangle rect = new Rectangle(fieldWidth, fieldHeight);
