@@ -16,6 +16,8 @@ public class SimulationConfig {
     private final int minMutations;
     private final int maxMutations;
     private final int  minReproductionEnergy;
+    private final int startingPlants;
+    private final int startingAnimals;
     private final int reproductionCost;
     private final int  startingEnergy;
     private final int dailyEnergyCost;
@@ -31,6 +33,8 @@ public class SimulationConfig {
         this.genotypeLength = Integer.parseInt(params.get(Parameter.GENOTYPE_LENGTH));
         this.minMutations = Integer.parseInt(params.get(Parameter.MIN_MUTATIONS));
         this.maxMutations = Integer.parseInt(params.get(Parameter.MAX_MUTATIONS));
+        this.startingPlants = Integer.parseInt(params.get(Parameter.STARTING_PLANTS));
+        this.startingAnimals = Integer.parseInt(params.get(Parameter.STARTING_ANIMALS));
         this.minReproductionEnergy = Integer.parseInt(params.get(Parameter.MIN_REPRODUCTION_ENERGY));
         this.reproductionCost = Integer.parseInt(params.get(Parameter.REPRODUCTION_ENERGY_COST));
         this.startingEnergy = Integer.parseInt(params.get(Parameter.STARTING_ENERGY));
@@ -70,6 +74,14 @@ public class SimulationConfig {
 
     public int getMinReproductionEnergy() {
         return minReproductionEnergy;
+    }
+
+    public int getStartingPlants() {
+        return startingPlants;
+    }
+
+    public int getStartingAnimals() {
+        return startingAnimals;
     }
 
     public int getReproductionCost() {
