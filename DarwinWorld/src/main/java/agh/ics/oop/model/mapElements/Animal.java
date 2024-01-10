@@ -9,6 +9,9 @@ import agh.ics.oop.model.utils.Genotype;
 
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeType;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -62,11 +65,10 @@ public class Animal implements MapElement {
     }
 
     @Override
-    public VisualRepresentation getVisualRepresentation() {
-        return new VisualRepresentationBuilder()
-                .setBackground(Color.RED)
-                .setText("A")
-                .build();
+    public Shape getVisualRepresentation(double width, double height) {
+        Shape mapRepresentation = new Rectangle(width, height);
+        mapRepresentation.setFill(Color.RED);
+        return mapRepresentation;
     }
     public void reproduction(Animal child) {
         this.energy-=reproductionCost;

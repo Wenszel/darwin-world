@@ -45,13 +45,14 @@ public class TunnelMap extends GlobeMap {
     }
 
     @Override
-    public List<MapElement> objectsAt(Vector2d position) {
-        List<MapElement> objectAtPosition = super.objectsAt(position);
-        tunnels.forEach((tunnel) -> {
-            if(tunnel.getPosition() == position) {
-                objectAtPosition.add(tunnel);
+    public List<MapElement> stackObjectsToDraw(Vector2d position) {
+        List<MapElement> stackObjectsAtPosition = super.stackObjectsToDraw(position);
+        for (Tunnel tunnel: tunnels) {
+            if (tunnel.getPosition().equals(position)) {
+                stackObjectsAtPosition.add(tunnel);
+                break;
             }
-        });
-        return objectAtPosition;
+        }
+        return stackObjectsAtPosition;
     }
 }

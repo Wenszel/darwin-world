@@ -136,11 +136,12 @@ public class GlobeMap implements WorldMap {
         return mapFields;
     }
 
-    @Override
-    public List<MapElement> objectsAt(Vector2d position) {
-        return mapFields.get(position).getElementsOnField();
-    }
 
+    @Override
+    public List<MapElement>  stackObjectsToDraw(Vector2d position) {
+        List<MapElement> elements = new LinkedList<>();
+        return elements;
+    }
     public int getWidth() {
         return width;
     }

@@ -86,4 +86,8 @@ public class MapField {
     public boolean getHasPlant() {
         return hasPlant;
     }
+
+    public Plant getPlant() {
+        return plant;
+    }
 }

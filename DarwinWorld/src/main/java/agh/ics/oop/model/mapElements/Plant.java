@@ -2,6 +2,8 @@ package agh.ics.oop.model.mapElements;
 
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class Plant implements MapElement{
     private final Vector2d position;
@@ -14,9 +16,9 @@ public class Plant implements MapElement{
     }
 
     @Override
-    public VisualRepresentation getVisualRepresentation() {
-        return new VisualRepresentationBuilder()
-                .setBackground(Color.GREEN)
-                .build();
+    public Shape getVisualRepresentation(double width, double height){
+        Shape mapRepresentation = new Rectangle(width, height);
+        mapRepresentation.setFill(Color.GREEN);
+        return mapRepresentation;
     }
 }

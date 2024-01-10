@@ -11,7 +11,7 @@ public interface WorldMap {
     void initializeMap();
     void moveAnimals();
     Map<Vector2d, MapField> getMapFields();
-    List<MapElement> objectsAt(Vector2d position);
+    List<MapElement> stackObjectsToDraw(Vector2d position);
     int getWidth();
     int getHeight();
     void reproduceAnimals();
