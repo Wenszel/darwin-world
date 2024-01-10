@@ -54,6 +54,7 @@ public class Animal implements MapElement {
 
     public void move(Vector2d rightBottomCorner) {
         this.direction.rotate(genotype.getCurrentGene());
+        genotype.goToNextGene();
         Vector2d destination = this.position.add(this.direction.toVector());
         this.position = calculatePosition(destination, rightBottomCorner);
         this.energy-=this.dailyEnergyCost;
@@ -108,8 +109,8 @@ public class Animal implements MapElement {
         return new Vector2d(x, y);
     }
 
-    public void kill() {
-        this.deathDay = dayAlive;
+    public void kill(int dayCounter) {
+        this.deathDay = dayCounter;
     }
     public int getDescendants() {
         Set<Animal> animals = new HashSet<>(children);

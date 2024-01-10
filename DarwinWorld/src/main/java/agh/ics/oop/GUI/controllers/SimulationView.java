@@ -5,6 +5,7 @@ import agh.ics.oop.SimulationConfig;
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.mapElements.*;
 import agh.ics.oop.model.maps.WorldMap;
+import agh.ics.oop.model.stats.AnimalStatistics;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
@@ -20,8 +21,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +34,8 @@ public class SimulationView implements SimulationListener {
     @FXML
     private VBox chartLegend;
     @FXML
-    private VBox stats;
+    private VBox statsBox;
+    private Animal observedAnimal;
 
     public void init(SimulationConfig config) {
         Simulation simulation = new Simulation(config);
@@ -46,7 +50,7 @@ public class SimulationView implements SimulationListener {
         mapGrid.prefWidthProperty().bind(stage.widthProperty().multiply(0.5));
         mapGrid.prefHeightProperty().bind(stage.heightProperty().subtract(100));
         chartLegend.prefWidthProperty().bind(stage.widthProperty().multiply(0.28));
-        stats.prefWidthProperty().bind(stage.widthProperty().multiply(0.22));
+        statsBox.prefWidthProperty().bind(stage.widthProperty().multiply(0.22));
 
         WorldMap map = simulation.getMap();
         Map<Vector2d, MapField> mapFields = map.getMapFields();
@@ -68,7 +72,10 @@ public class SimulationView implements SimulationListener {
             if(mapFields.get(position).getAnimalsOnField().size() > 0) {
                 Animal animal = mapFields.get(position).getAnimalsOnField().get(0);
                 Shape animalUX = animal.getVisualRepresentation(fieldWidth, fieldHeight);
-                animalUX.setOnMouseClicked(event -> System.out.println("Kliknięto na zwierzę!"));
+                if(animal==observedAnimal) {
+                    animalUX.setFill(Color.YELLOW);
+                }
+                animalUX.setOnMouseClicked(event -> this.observedAnimal = animal);
                 mapGrid.add(animalUX, animal.getPosition().getX(), animal.getPosition().getY());
             } else if(mapFields.get(position).getHasPlant()) {
                 Plant plant = mapFields.get(position).getPlant();
@@ -78,6 +85,19 @@ public class SimulationView implements SimulationListener {
                 mapGrid.add(element.getVisualRepresentation(fieldWidth, fieldHeight), element.getPosition().getX(), element.getPosition().getY());
             }
         }
+        if(observedAnimal != null) {
+            showAnimalStats(observedAnimal);
+        }
+    }
+    private void showAnimalStats(Animal animal) {
+        statsBox.getChildren().clear();
+        AnimalStatistics stats = animal.getAnimalStats();
+        List<Text> statsFields = new LinkedList<>(List.of(new Text("Genotype: " + stats.getGenotype()),
+                new Text("Active gene: " + animal.getGenotype().getCurrentGene()), new Text("Energy: " + stats.getEnergy()),
+                new Text("Eaten plants: " + stats.getEatenPlants()), new Text("Children amount: " + stats.getChildrenAmount()),
+        new Text("Descendant amount: " + stats.getDescendantAmount()), new Text("Day alive: " + stats.getDayAlive()),
+        new Text("Death day: " + stats.getDeathDay())));
+        statsBox.getChildren().addAll(statsFields);
     }
     @Override
     public void refreshSimulation(Simulation simulation, String message) {

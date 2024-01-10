@@ -12,6 +12,7 @@ public class Simulation implements Runnable {
     private final List<SimulationListener>  listeners = new ArrayList<>();
     private final WorldMap map;
     private final SimulationConfig config;
+    private int dayCounter = 1;
     public Simulation(SimulationConfig config) {
         this.config = config;
         this.map = MapFactory.createMap(config);
@@ -28,11 +29,12 @@ public class Simulation implements Runnable {
         }
     }
     public void runDay() {
-        map.removeDeadAnimals();
+        map.removeDeadAnimals(dayCounter);
         map.moveAnimals();
         map.consumePlants();
         map.reproduceAnimals();
         map.growPlants(config.getDailyPlantsGrowth());
+        dayCounter+=1;
     }
 
     public void addSubscriber(SimulationListener listener) {

@@ -29,10 +29,7 @@
         <GridPane fx:id="mapGrid"  alignment="center"/>
     </center>
     <right>
-        <VBox fx:id="stats">
-            <Label text="Statysktyka A: 5" />
-            <Label text="Statysktyka b: 6" />
-
+        <VBox fx:id="statsBox">
         </VBox>
     </right>
 </BorderPane>

@@ -99,13 +99,14 @@ public class GlobeMap implements WorldMap {
             });
         }
     }
-    public void removeDeadAnimals() {
+    @Override
+    public void removeDeadAnimals(int dayCounter) {
         ListIterator<Animal> iterator = animals.listIterator();
         while(iterator.hasNext()) {
             Animal animal = iterator.next();
             if(animal.getEnergy() <= config.getDailyEnergyCost()) {
                 mapFields.get(animal.getPosition()).removeAnimal(animal);
-                animal.kill();
+                animal.kill(dayCounter);
                 iterator.remove();
             }
         }

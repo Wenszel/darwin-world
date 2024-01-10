@@ -37,9 +37,10 @@ public class Genotype {
     }
 
     public int getCurrentGene() {
-        int gene = genotype.get(currentGeneIndex);
-        currentGeneIndex = (currentGeneIndex + 1) % length;
-        return gene;
+        return genotype.get(currentGeneIndex);
+    }
+    public void goToNextGene() {
+        this.currentGeneIndex = (currentGeneIndex + 1) % length;
     }
 
     public List<Integer> getGenotypeList() {
@@ -70,4 +71,8 @@ public class Genotype {
         return childrenGenotypeList;
     }
 
+    @Override
+    public String toString() {
+        return genotype.toString();
+    }
 }
