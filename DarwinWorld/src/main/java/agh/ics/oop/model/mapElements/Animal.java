@@ -8,6 +8,7 @@ import agh.ics.oop.model.utils.Direction;
 import agh.ics.oop.model.utils.Genotype;
 
 import agh.ics.oop.model.utils.Vector2d;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -66,10 +67,9 @@ public class Animal implements MapElement {
     }
 
     @Override
-    public Shape getVisualRepresentation(double width, double height) {
-        Shape mapRepresentation = new Rectangle(width, height);
-        mapRepresentation.setFill(Color.RED);
-        return mapRepresentation;
+    public void drawOnMap(GraphicsContext gc, double fieldWidth, double fieldHeight) {
+        gc.setFill(Color.RED);
+        gc.fillRect(position.getX() * fieldWidth, position.getY() * fieldHeight, fieldWidth, fieldHeight);
     }
     public void reproduction(Animal child) {
         this.energy-=reproductionCost;
@@ -115,8 +115,8 @@ public class Animal implements MapElement {
     public int getDescendants() {
         Set<Animal> animals = new HashSet<>(children);
         int amount = animals.size();
-        for(Animal child : children) {
-            amount += child.getDescendants();
+        for(Animal child : animals) {
+                amount += child.getDescendants();
         }
         return amount;
     }

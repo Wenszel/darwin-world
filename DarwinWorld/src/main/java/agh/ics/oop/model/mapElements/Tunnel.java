@@ -1,6 +1,7 @@
 package agh.ics.oop.model.mapElements;
 
 import agh.ics.oop.model.utils.Vector2d;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -25,12 +26,9 @@ public class Tunnel implements MapElement {
     }
 
     @Override
-    public Shape getVisualRepresentation(double width, double height) {
-        Shape mapRepresentation = new Rectangle(width, height);
-        mapRepresentation.setStroke(Color.BROWN);
-        mapRepresentation.setStrokeWidth(width/6);
-        mapRepresentation.setStrokeType(StrokeType.INSIDE);
-        mapRepresentation.setFill(Color.TRANSPARENT);
-        return mapRepresentation;
+    public void drawOnMap(GraphicsContext gc, double fieldWidth, double fieldHeight) {
+        gc.setStroke(Color.BROWN);
+        gc.setLineWidth(fieldWidth/6);
+        gc.strokeRect(position.getX()* fieldWidth, position.getY()* fieldHeight, fieldWidth, fieldHeight);
     }
 }

@@ -7,6 +7,7 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.GUI.controllers.SimulationView">
     <left>
         <VBox fx:id="chartLegend" spacing="10">
@@ -26,7 +27,7 @@
         </VBox>
     </left>
     <center>
-        <GridPane fx:id="mapGrid"  alignment="center"/>
+        <Pane fx:id="mapBox"/>
     </center>
     <right>
         <VBox fx:id="statsBox">

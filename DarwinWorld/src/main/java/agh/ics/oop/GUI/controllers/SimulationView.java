@@ -10,13 +10,13 @@ import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class SimulationView implements SimulationListener {
     @FXML
-    private GridPane mapGrid;
+    private Pane mapBox;
     @FXML
     private VBox chartLegend;
     @FXML
@@ -45,44 +45,46 @@ public class SimulationView implements SimulationListener {
     }
 
     public void drawMap(Simulation simulation) {
-        mapGrid.getChildren().clear();
-        Stage stage = (Stage) mapGrid.getScene().getWindow();
-        mapGrid.prefWidthProperty().bind(stage.widthProperty().multiply(0.5));
-        mapGrid.prefHeightProperty().bind(stage.heightProperty().subtract(100));
+        mapBox.getChildren().clear();
+        Stage stage = (Stage) mapBox.getScene().getWindow();
+        mapBox.prefWidthProperty().bind(stage.widthProperty().multiply(0.5));
+        mapBox.prefHeightProperty().bind(stage.heightProperty().subtract(100));
         chartLegend.prefWidthProperty().bind(stage.widthProperty().multiply(0.28));
         statsBox.prefWidthProperty().bind(stage.widthProperty().multiply(0.22));
 
         WorldMap map = simulation.getMap();
         Map<Vector2d, MapField> mapFields = map.getMapFields();
 
-        double fieldWidth = mapGrid.getPrefWidth() / map.getWidth();
-        double fieldHeight = mapGrid.getPrefHeight() / map.getHeight();
-        for (int y = 0; y < map.getHeight(); y++) {
-            for (int x = 0; x < map.getWidth(); x++) {
-                Rectangle rect = new Rectangle(fieldWidth, fieldHeight);
-                if (mapFields.get(new Vector2d(x, y)).isPreferred()) {
-                    rect.setFill(Color.GRAY);
-                } else {
-                    rect.setFill(Color.WHITE);
-                }
-                mapGrid.add(rect, x, y);
+        double fieldWidth = mapBox.getPrefWidth() / map.getWidth();
+        double fieldHeight = mapBox.getPrefHeight() / map.getHeight();
+
+        Canvas canvas = new Canvas(mapBox.getWidth(), mapBox.getHeight());
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        canvas.setOnMouseClicked(event -> {
+            System.out.println("Clicked on: " + event.getX() + " " + event.getY());
+            Vector2d clickedPosition = new Vector2d((int) (event.getX() / fieldWidth), (int) (event.getY() / fieldHeight));
+            if(mapFields.get(clickedPosition) !=null && !mapFields.get(clickedPosition).getAnimalsOnField().isEmpty()) {
+                this.observedAnimal = mapFields.get(clickedPosition).getAnimalsOnField().get(0);
             }
-        }
+            System.out.println("Clicked on: " + clickedPosition);
+        });
+        mapBox.getChildren().add(canvas);
         for (Vector2d position : mapFields.keySet()) {
+            if (mapFields.get(position).isPreferred()) {
+                gc.setFill(Color.GRAY);
+                gc.fillRect(position.getX() * fieldWidth, position.getY() * fieldHeight, fieldWidth, fieldHeight);
+            }
             if(mapFields.get(position).getAnimalsOnField().size() > 0) {
                 Animal animal = mapFields.get(position).getAnimalsOnField().get(0);
-                Shape animalUX = animal.getVisualRepresentation(fieldWidth, fieldHeight);
                 if(animal==observedAnimal) {
-                    animalUX.setFill(Color.YELLOW);
                 }
-                animalUX.setOnMouseClicked(event -> this.observedAnimal = animal);
-                mapGrid.add(animalUX, animal.getPosition().getX(), animal.getPosition().getY());
+                animal.drawOnMap(gc, fieldWidth, fieldHeight);
             } else if(mapFields.get(position).getHasPlant()) {
                 Plant plant = mapFields.get(position).getPlant();
-                mapGrid.add(plant.getVisualRepresentation(fieldWidth, fieldHeight), position.getX(), position.getY());
+                plant.drawOnMap(gc, fieldWidth, fieldHeight);
             }
             for(MapElement element : map.stackObjectsToDraw(position)) {
-                mapGrid.add(element.getVisualRepresentation(fieldWidth, fieldHeight), element.getPosition().getX(), element.getPosition().getY());
+                element.drawOnMap(gc, fieldWidth, fieldHeight);
             }
         }
         if(observedAnimal != null) {
@@ -98,12 +100,18 @@ public class SimulationView implements SimulationListener {
         new Text("Descendant amount: " + stats.getDescendantAmount()), new Text("Day alive: " + stats.getDayAlive()),
         new Text("Death day: " + stats.getDeathDay())));
         statsBox.getChildren().addAll(statsFields);
+
     }
     @Override
     public void refreshSimulation(Simulation simulation, String message) {
         System.out.println(message);
-        Platform.runLater(() -> {
-            drawMap(simulation);
-        });
+        Task<Void> task = new Task<>() {
+            @Override
+            public Void call() {
+                drawMap(simulation);
+                return null;
+            }
+        };
+        Platform.runLater(task);
     }
 }

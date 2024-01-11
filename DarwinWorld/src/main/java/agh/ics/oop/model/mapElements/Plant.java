@@ -1,6 +1,7 @@
 package agh.ics.oop.model.mapElements;
 
 import agh.ics.oop.model.utils.Vector2d;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -16,9 +17,8 @@ public class Plant implements MapElement{
     }
 
     @Override
-    public Shape getVisualRepresentation(double width, double height){
-        Shape mapRepresentation = new Rectangle(width, height);
-        mapRepresentation.setFill(Color.GREEN);
-        return mapRepresentation;
+    public void drawOnMap(GraphicsContext gc, double fieldWidth, double fieldHeight){
+        gc.setFill(Color.GREEN);
+        gc.fillRect(position.getX() * fieldWidth, position.getY() * fieldHeight, fieldWidth, fieldHeight);
     }
 }
