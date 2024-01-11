@@ -3,6 +3,8 @@ package agh.ics.oop;
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.factories.MapFactory;
 import agh.ics.oop.model.maps.WorldMap;
+import agh.ics.oop.model.stats.SimulationStatistics;
+import agh.ics.oop.model.stats.SimulationStatisticsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ public class Simulation implements Runnable {
     private final WorldMap map;
     private final SimulationConfig config;
     private int dayCounter = 1;
+    private double deadAnimalsAverageLifeLength;
     public Simulation(SimulationConfig config) {
         this.config = config;
         this.map = MapFactory.createMap(config);
@@ -29,7 +32,7 @@ public class Simulation implements Runnable {
         }
     }
     public void runDay() {
-        map.removeDeadAnimals(dayCounter);
+        deadAnimalsAverageLifeLength = map.removeDeadAnimals(dayCounter);
         map.moveAnimals();
         map.consumePlants();
         map.reproduceAnimals();
@@ -54,4 +57,11 @@ public class Simulation implements Runnable {
         return map;
     }
 
+    public int getDayCounter() {
+        return dayCounter;
+    }
+
+    public double getDeadAnimalsAverageLifeLength() {
+        return deadAnimalsAverageLifeLength;
+    }
 }

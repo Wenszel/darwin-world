@@ -6,12 +6,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.layout.HBox?>
+
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.SplitPane?>
+
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.GUI.controllers.SimulationView">
     <left>
-        <VBox fx:id="chartLegend" spacing="10">
-            <Label text="Evolution Simulator:"/>
+        <SplitPane fx:id="leftSide" orientation="VERTICAL" dividerPositions="0.5">
             <LineChart fx:id="populationChart">
                 <xAxis>
                     <NumberAxis label="Days"/>
@@ -20,17 +21,23 @@
                     <NumberAxis label="Population"/>
                 </yAxis>
             </LineChart>
-            <HBox spacing="10">
+            <VBox fx:id="simulationStatsBox" spacing="10">
                 <Label text="O - zwierzak"/>
                 <Label text="P - roslina"/>
-            </HBox>
-        </VBox>
+            </VBox>
+        </SplitPane>
     </left>
     <center>
         <Pane fx:id="mapBox"/>
     </center>
     <right>
-        <VBox fx:id="statsBox">
-        </VBox>
+        <SplitPane fx:id="rightSide" dividerPositions="0.5" orientation="VERTICAL">
+            <VBox fx:id="animalStatsBox">
+            </VBox>
+            <VBox>
+                <Label text="O - zwierzak"/>
+                <Label text="P - roslina"/>
+            </VBox>
+        </SplitPane>
     </right>
 </BorderPane>

@@ -113,16 +113,26 @@ public class Animal implements MapElement {
         this.deathDay = dayCounter;
     }
     public int getDescendants() {
-        Set<Animal> animals = new HashSet<>(children);
-        int amount = animals.size();
-        for(Animal child : animals) {
-                amount += child.getDescendants();
-        }
-        return amount;
+        //TODO
+        //Something is wrong with this method
+//        Set<Animal> animals = new HashSet<>(children);
+//        int amount = animals.size();
+//        for(Animal child : animals) {
+//                amount += child.getDescendants();
+//        }
+//        return amount;
+        return 10;
+    }
+    public int getChildrenAmount() {
+        return children.size();
     }
     public AnimalStatistics getAnimalStats()  {
         return new AnimalStatisticsBuilder().setGenotype(genotype).setCurrentActiveGene(genotype.getCurrentGene())
                 .setEnergy(energy).setEatenPlants(eatenPlants).setChildrenAmount(children.size()).setDescendantAmount(getDescendants())
                 .setDayAlive(dayAlive).setDeathDay(deathDay).build();
+    }
+
+    public int getDayAlive() {
+        return dayAlive;
     }
 }

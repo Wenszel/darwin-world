@@ -2,6 +2,8 @@ package agh.ics.oop.model.maps;
 
 import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
+import agh.ics.oop.model.utils.Genotype;
+import agh.ics.oop.model.utils.KeyValue;
 import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.List;
@@ -15,7 +17,10 @@ public interface WorldMap {
     int getWidth();
     int getHeight();
     void reproduceAnimals();
-    void removeDeadAnimals(int dayCounter);
+    double removeDeadAnimals(int dayCounter);
     void consumePlants();
     void growPlants(int amount);
+    List<KeyValue<Genotype, Integer>> getMostPopularGenotypes();
+
+
 }

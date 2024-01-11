@@ -6,10 +6,7 @@ import agh.ics.oop.model.Config.variants.MutationVariantName;
 import agh.ics.oop.model.factories.MutationVariantFactory;
 import agh.ics.oop.model.mapElements.Animal;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Genotype {
     private final List<Integer> genotype = new ArrayList<>();
@@ -74,5 +71,17 @@ public class Genotype {
     @Override
     public String toString() {
         return genotype.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Genotype genotype1 = (Genotype) o;
+        return genotype.equals(genotype1.genotype);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(genotype);
     }
 }
