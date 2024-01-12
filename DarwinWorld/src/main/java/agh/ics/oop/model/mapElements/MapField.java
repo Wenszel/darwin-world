@@ -47,9 +47,9 @@ public class MapField {
 
     public Optional<MapField> consumePlant() {
         Optional<Animal> strongestAnimal = animalsOnField.stream().max(new AnimalComparator());
-        if(strongestAnimal.isPresent()) {
+        if(strongestAnimal.isPresent() && this.hasPlant) {
             Animal animal = strongestAnimal.get();
-            animal.addEnergy(config.getEnergyFromPlant());
+            animal.consumePlant();
             this.hasPlant = false;
             this.plant = null;
             return Optional.of(this);
@@ -64,11 +64,12 @@ public class MapField {
         if(animalsOnField.size() >= 2) {
             List<Animal> parents = findParents();
             if(parents.get(1).getEnergy() >= config.getMinReproductionEnergy()) {
-                Animal children = new Animal(this.fieldPosition, config,parents.get(0), parents.get(1));
-                parents.get(0).addEnergy(-config.getReproductionCost());
-                parents.get(1).addEnergy(-config.getReproductionCost());
-                animalsOnField.add(children);
-                return Optional.of(children);
+                Animal child = new Animal(this.fieldPosition, config,parents.get(0), parents.get(1));
+                parents.get(0).reproduction(child);
+                parents.get(1).reproduction(child);
+
+                animalsOnField.add(child);
+                return Optional.of(child);
             }
         }
 
@@ -84,5 +85,9 @@ public class MapField {
 
     public boolean getHasPlant() {
         return hasPlant;
+    }
+
+    public Plant getPlant() {
+        return plant;
     }
 }
