@@ -11,17 +11,16 @@ import agh.ics.oop.model.utils.Genotype;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.util.List;
 import java.util.Map;
 
 public class SimulationView implements SimulationListener {
@@ -37,6 +36,9 @@ public class SimulationView implements SimulationListener {
     @FXML
     private VBox animalStatsBox;
     private AnimalStatsView animalStatsView;
+    @FXML
+    private LineChart<Integer, Integer> populationChart;
+    private ChartView chartView;
     private Animal observedAnimal;
     private Simulation simulation;
     private boolean isPreferableShown = false;
@@ -47,6 +49,7 @@ public class SimulationView implements SimulationListener {
         simulation.addSubscriber(this);
         simulationStatsView = new SimulationStatsView(simulationStatsBox);
         animalStatsView = new AnimalStatsView(animalStatsBox);
+        chartView = new ChartView(populationChart, simulation.getDayManager());
         Thread simulationTask = new Thread(simulation);
         simulationTask.start();
     }
@@ -96,8 +99,8 @@ public class SimulationView implements SimulationListener {
         simulationStatsView.showSimulationStats(
                 new SimulationStatisticsBuilder()
                     .collectMapStatistics(mapStatisticsCollector)
-                    .setCurrentDay(simulation.getDayCounter())
-                    .setAverageDeadAnimalsLifeLength(simulation.getDeadAnimalsAverageLifeLength())
+                    .setCurrentDay(simulation.getDayManager().getDay())
+                    .setAverageDeadAnimalsLifeLength(simulation.getDayManager().getDeadAnimalsAverageLifeLength())
                     .setMostPopularGenotypes(simulation.getMap().getMostPopularGenotypes())
                     .build());
     }
@@ -140,6 +143,7 @@ public class SimulationView implements SimulationListener {
             @Override
             public Void call() {
                 drawSimulationWindow();
+                chartView.addDayDataToChart();
                 return null;
             }
         };

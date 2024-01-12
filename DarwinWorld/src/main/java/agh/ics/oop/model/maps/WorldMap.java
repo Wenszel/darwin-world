@@ -20,6 +20,7 @@ public interface WorldMap {
     double removeDeadAnimals(int dayCounter);
     void consumePlants();
     void growPlants(int amount);
+    int getNumberOfAnimals();
     List<KeyValue<Genotype, Integer>> getMostPopularGenotypes();
 
 
