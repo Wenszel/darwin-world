@@ -28,7 +28,11 @@ public class Tunnel implements MapElement {
     @Override
     public void drawOnMap(GraphicsContext gc, double fieldWidth, double fieldHeight) {
         gc.setStroke(Color.BROWN);
-        gc.setLineWidth(fieldWidth/6);
-        gc.strokeRect(position.getX()* fieldWidth, position.getY()* fieldHeight, fieldWidth, fieldHeight);
+        double strokeWidth = fieldWidth / 6;
+        gc.setLineWidth(strokeWidth);
+        gc.strokeRect(position.getX() * fieldWidth + strokeWidth / 2,
+                position.getY() * fieldHeight + strokeWidth / 2,
+                fieldWidth - strokeWidth,
+                fieldHeight - strokeWidth);
     }
 }
