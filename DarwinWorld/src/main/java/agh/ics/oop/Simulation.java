@@ -89,6 +89,10 @@ public class Simulation implements Runnable {
         return dayCounter;
     }
 
+    public boolean isPaused() {
+        return paused;
+    }
+
     public double getDeadAnimalsAverageLifeLength() {
         return deadAnimalsAverageLifeLength;
     }

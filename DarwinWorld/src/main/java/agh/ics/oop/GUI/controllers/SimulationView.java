@@ -139,8 +139,9 @@ public class SimulationView implements SimulationListener {
     }
 
     public void handlePreferableFieldsDisplay() {
-
-        isPreferableShown = !isPreferableShown;
-        drawSimulationWindow();
+        if (simulation.isPaused()) {
+            isPreferableShown = !isPreferableShown;
+            drawSimulationWindow();
+        }
     }
 }
