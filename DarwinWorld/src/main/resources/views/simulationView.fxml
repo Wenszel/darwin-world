@@ -39,6 +39,7 @@
                     <Button onAction="#pause" >Pause</Button>
                     <Button onAction="#resume">Resume</Button>
                     <Button onAction="#handlePreferableFieldsDisplay">Show preferable</Button>
+                    <Button onAction="#handleDominantGenotypeDisplay">Show animals with dominant genotype</Button>
                 </HBox>
             </VBox>
         </SplitPane>
