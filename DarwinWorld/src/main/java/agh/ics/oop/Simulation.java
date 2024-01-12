@@ -77,7 +77,7 @@ public class Simulation implements Runnable {
     }
     private void mapChanged(String message) {
         for(SimulationListener listener : listeners) {
-            listener.refreshSimulation(this, message);
+            listener.refreshSimulation(message);
         }
     }
 

@@ -30,6 +30,14 @@ public class SimulationStatisticsBuilder implements Builder<SimulationStatistics
         stats.setAverageAnimalsChildrenAmount(this.averageAnimalsChildrenAmount);
         return stats;
     }
+    public SimulationStatisticsBuilder collectMapStatistics(MapStatisticsCollector mapStatisticsCollector) {
+        setAnimalsAmount(mapStatisticsCollector.getAnimalsAmount());
+        setPlantsAmount(mapStatisticsCollector.getPlantsAmount());
+        setAverageEnergy(mapStatisticsCollector.getAverageEnergy());
+        setAverageAnimalsChildrenAmount(mapStatisticsCollector.getAverageAnimalsChildrenAmount());
+        setEmptyFieldsAmount(mapStatisticsCollector.getEmptyFieldsAmount());
+        return this;
+    }
     public SimulationStatisticsBuilder setCurrentDay(int currentDay) {
         this.currentDay = currentDay;
         return this;

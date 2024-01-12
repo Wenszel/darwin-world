@@ -38,6 +38,7 @@
                 <HBox>
                     <Button onAction="#pause" >Pause</Button>
                     <Button onAction="#resume">Resume</Button>
+                    <Button onAction="#handlePreferableFieldsDisplay">Show preferable</Button>
                 </HBox>
             </VBox>
         </SplitPane>
