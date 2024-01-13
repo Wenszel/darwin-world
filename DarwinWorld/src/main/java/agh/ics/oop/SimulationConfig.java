@@ -23,7 +23,7 @@ public class SimulationConfig {
     private final int dailyEnergyCost;
     private final int dailyPlantsGrowth;
     private final int energyFromPlant;
-
+    private final boolean saveToCSV;
 
     public SimulationConfig(HashMap<Parameter, String> params) {
         this.mapWidth =  Integer.parseInt(params.get(Parameter.MAP_WIDTH));
@@ -41,6 +41,7 @@ public class SimulationConfig {
         this.dailyEnergyCost = Integer.parseInt(params.get(Parameter.DAILY_ENERGY_COST));
         this.dailyPlantsGrowth = Integer.parseInt(params.get(Parameter.DAILY_PLANTS_GROWTH));
         this.energyFromPlant = Integer.parseInt(params.get(Parameter.ENERGY_FROM_PLANT));
+        this.saveToCSV = Boolean.parseBoolean(params.get(Parameter.SAVE_TO_CSV));
     }
 
 
@@ -102,5 +103,8 @@ public class SimulationConfig {
 
     public int getEnergyFromPlant() {
         return energyFromPlant;
+    }
+    public boolean getSaveToCSV() {
+        return saveToCSV;
     }
 }

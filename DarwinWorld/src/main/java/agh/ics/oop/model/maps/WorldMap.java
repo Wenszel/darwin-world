@@ -8,6 +8,7 @@ import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface WorldMap {
     void initializeMap();
@@ -16,6 +17,7 @@ public interface WorldMap {
     List<MapElement> stackObjectsToDraw(Vector2d position);
     int getWidth();
     int getHeight();
+    UUID getId();
     void reproduceAnimals();
     double removeDeadAnimals(int dayCounter);
     void consumePlants();

@@ -6,7 +6,9 @@ import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.mapElements.*;
 import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.stats.MapStatisticsCollector;
+import agh.ics.oop.model.stats.SimulationStatistics;
 import agh.ics.oop.model.stats.SimulationStatisticsBuilder;
+import agh.ics.oop.model.stats.StatsFileManager;
 import agh.ics.oop.model.utils.Genotype;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
@@ -43,6 +45,8 @@ public class SimulationView implements SimulationListener {
     private Simulation simulation;
     private boolean isPreferableShown = false;
     private boolean isDominantGenotypeShown = false;
+    private boolean isSavingToCSVTurnedOn = false;
+    private StatsFileManager statsFileManager;
 
     public void init(SimulationConfig config) {
         simulation = new Simulation(config);
@@ -50,6 +54,10 @@ public class SimulationView implements SimulationListener {
         simulationStatsView = new SimulationStatsView(simulationStatsBox);
         animalStatsView = new AnimalStatsView(animalStatsBox);
         chartView = new ChartView(populationChart, simulation.getDayManager());
+        isSavingToCSVTurnedOn = config.getSaveToCSV();
+        if (isSavingToCSVTurnedOn) {
+            statsFileManager = new StatsFileManager(simulation.getMap().getId());
+        }
         Thread simulationTask = new Thread(simulation);
         simulationTask.start();
     }
@@ -96,13 +104,16 @@ public class SimulationView implements SimulationListener {
         if (observedAnimal != null) {
             animalStatsView.showAnimalStats(observedAnimal);
         }
-        simulationStatsView.showSimulationStats(
-                new SimulationStatisticsBuilder()
-                    .collectMapStatistics(mapStatisticsCollector)
-                    .setCurrentDay(simulation.getDayManager().getDay())
-                    .setAverageDeadAnimalsLifeLength(simulation.getDayManager().getDeadAnimalsAverageLifeLength())
-                    .setMostPopularGenotypes(simulation.getMap().getMostPopularGenotypes())
-                    .build());
+        SimulationStatistics stats = new SimulationStatisticsBuilder()
+                .collectMapStatistics(mapStatisticsCollector)
+                .setCurrentDay(simulation.getDayManager().getDay())
+                .setAverageDeadAnimalsLifeLength(simulation.getDayManager().getDeadAnimalsAverageLifeLength())
+                .setMostPopularGenotypes(simulation.getMap().getMostPopularGenotypes())
+                .build();
+        simulationStatsView.showSimulationStats(stats);
+        if (isSavingToCSVTurnedOn) {
+            statsFileManager.save(stats);
+        }
     }
 
     private void drawAnimalOnMap(MapField mapField, GraphicsContext gc, double fieldWidth, double fieldHeight) {

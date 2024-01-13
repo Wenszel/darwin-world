@@ -7,6 +7,7 @@ import agh.ics.oop.model.maps.MapType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXMLLoader;
@@ -42,6 +43,7 @@ public class StartingView {
     @FXML private TextField energyFromPlantInput;
     @FXML private Button loadFromCSVButton;
     @FXML private Button saveToCSVButton;
+    @FXML private CheckBox saveStatsToCSVCheckBox;
     public void init() {
         Image backgroundImage = new Image("/images/background.jpg");
         BackgroundImage background = new BackgroundImage(backgroundImage,
@@ -143,6 +145,8 @@ public class StartingView {
                         case "ENERGY_FROM_PLANT":
                             energyFromPlantInput.setText(values[1]);
                             break;
+                        case "SAVE_TO_CSV":
+                            saveStatsToCSVCheckBox.setSelected(Boolean.parseBoolean(values[1]));
                         default:
                             System.out.println("Unknown param: " + values[0]);
                             break;
@@ -194,11 +198,10 @@ public class StartingView {
         String dailyEnergyCostValue = "DAILY_ENERGY_COST;" + dailyEnergyCostInput.getText();
         String dailyPlantsGrowthValue = "DAILY_PLANTS_GROWTH;" + dailyPlantsGrowthInput.getText();
         String energyFromPlantValue = "ENERGY_FROM_PLANT;" + energyFromPlantInput.getText();
-
-        List<String> lines = Arrays.asList(mapWidthValue, mapHeightValue,mapTypeValue, mutationVariantValue, genotypeLengthValue,
+        String saveToCSV = "SAVE_TO_CSV;" + saveStatsToCSVCheckBox.isSelected();
+        return Arrays.asList(mapWidthValue, mapHeightValue,mapTypeValue, mutationVariantValue, genotypeLengthValue,
                 maxMutationsValue, minMutationsValue,startingPlantsValue, startingAnimalsValue,minReproductionEnergyValue,
-                reproductionEnergyCostValue, startingEnergyValue, dailyEnergyCostValue, dailyPlantsGrowthValue, energyFromPlantValue);
-        return lines;
+                reproductionEnergyCostValue, startingEnergyValue, dailyEnergyCostValue, dailyPlantsGrowthValue, energyFromPlantValue, saveToCSV);
     }
 
     @FXML
@@ -239,6 +242,7 @@ public class StartingView {
             params.put(Parameter.DAILY_ENERGY_COST, dailyEnergyCostInput.getText());
             params.put(Parameter.DAILY_PLANTS_GROWTH, dailyPlantsGrowthInput.getText());
             params.put(Parameter.ENERGY_FROM_PLANT, energyFromPlantInput.getText());
+            params.put(Parameter.SAVE_TO_CSV, String.valueOf(saveStatsToCSVCheckBox.isSelected()));
         } catch (NumberFormatException e) {
             System.out.println("Incorrect values");
         }
