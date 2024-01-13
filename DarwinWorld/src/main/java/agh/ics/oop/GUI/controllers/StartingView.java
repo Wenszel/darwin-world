@@ -14,15 +14,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class StartingView {
     @FXML private AnchorPane rootPane;
@@ -44,6 +41,9 @@ public class StartingView {
     @FXML private Button loadFromCSVButton;
     @FXML private Button saveToCSVButton;
     @FXML private CheckBox saveStatsToCSVCheckBox;
+    private final Map<Parameter, SetAction> setAction = new HashMap<>();
+    private final Map<Parameter, GetAction> getActions = new HashMap<>();
+
     public void init() {
         Image backgroundImage = new Image("/images/background.jpg");
         BackgroundImage background = new BackgroundImage(backgroundImage,
@@ -56,10 +56,11 @@ public class StartingView {
         for (MutationVariantName type : MutationVariantName.values()) {
             mutationVariant.getItems().add(type.toString());
         }
+        generateInputSetters();
+        generateInputGetters();
     }
 
     public void onSimulationStartClicked() throws Exception {
-
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("views/simulationView.fxml"));
         Scene scene = new Scene(loader.load());
@@ -73,6 +74,7 @@ public class StartingView {
         SimulationConfig config = createConfigFromInputs();
         simulationController.init(config);
     }
+
     @FXML
     private void load() {
         FileChooser fileChooser = new FileChooser();
@@ -89,67 +91,16 @@ public class StartingView {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] values = line.split(";");
-                    switch (values[0]) {
-                        case "MAP_WIDTH":
-                            mapWidth.setText(values[1]);
-                            break;
-                        case "MAP_HEIGHT":
-                            mapHeight.setText(values[1]);
-                            break;
-                        case "MAP_TYPE":
-                            try {
-                                MapType map = MapType.valueOf(values[1]);
-                                mapType.setValue(map.toString());
-                            }catch (IllegalArgumentException err){
-                                System.out.println(err);
-                            };
-                            break;
-                        case "MUTATION_VARIANT":
-                            try {
-                                MutationVariantName variant = MutationVariantName.valueOf(values[1]);
-                                mutationVariant.setValue(variant.toString());
-                            }catch (IllegalArgumentException err){
-                                System.out.println(err);
-                            };
-                            break;
-                        case "GENOTYPE_LENGTH":
-                            genotypeLengthInput.setText(values[1]);
-                            break;
-                        case "MAX_MUTATIONS":
-                            maxMutationsInput.setText(values[1]);
-                            break;
-                        case "MIN_MUTATIONS":
-                            minMutationsInput.setText(values[1]);
-                            break;
-                        case "STARTING_PLANTS":
-                            startingPlantsInput.setText(values[1]);
-                            break;
-                        case "STARTING_ANIMALS":
-                            startingAnimalsInput.setText(values[1]);
-                            break;
-                        case "MIN_REPRODUCTION_ENERGY":
-                            minReproductionEnergyInput.setText(values[1]);
-                            break;
-                        case "REPRODUCTION_ENERGY_COST":
-                            reproductionEnergyCostInput.setText(values[1]);
-                            break;
-                        case "STARTING_ENERGY":
-                            startingEnergyInput.setText(values[1]);
-                            break;
-                        case "DAILY_ENERGY_COST":
-                            dailyEnergyCostInput.setText(values[1]);
-                            break;
-                        case "DAILY_PLANTS_GROWTH":
-                            dailyPlantsGrowthInput.setText(values[1]);
-                            break;
-                        case "ENERGY_FROM_PLANT":
-                            energyFromPlantInput.setText(values[1]);
-                            break;
-                        case "SAVE_TO_CSV":
-                            saveStatsToCSVCheckBox.setSelected(Boolean.parseBoolean(values[1]));
-                        default:
+                    try {
+                        Parameter param = Parameter.valueOf(values[0]);
+                        SetAction action = setAction.get(param);
+                        if (action != null) {
+                            action.set(values[1]);
+                        } else {
                             System.out.println("Unknown param: " + values[0]);
-                            break;
+                        }
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Invalid parameter name: " + values[0]);
                     }
                 }
             } catch (IOException e) {
@@ -183,25 +134,14 @@ public class StartingView {
     }
 
     private List<String> getStrings() {
-        String mapWidthValue = "MAP_WIDTH;" + mapWidth.getText();
-        String mapHeightValue = "MAP_HEIGHT;" + mapHeight.getText();
-        String mapTypeValue = "MAP_TYPE;" + mapType.getValue();
-        String genotypeLengthValue = "GENOTYPE_LENGTH;" + genotypeLengthInput.getText();
-        String mutationVariantValue = "MUTATION_VARIANT;" + mutationVariant.getValue();
-        String maxMutationsValue = "MAX_MUTATIONS;" + maxMutationsInput.getText();
-        String minMutationsValue = "MIN_MUTATIONS;" + minMutationsInput.getText();
-        String startingPlantsValue = "STARTING_PLANTS;" + startingPlantsInput.getText();
-        String startingAnimalsValue = "STARTING_ANIMALS;" + startingAnimalsInput.getText();
-        String minReproductionEnergyValue = "MIN_REPRODUCTION_ENERGY;" + minReproductionEnergyInput.getText();
-        String reproductionEnergyCostValue = "REPRODUCTION_ENERGY_COST;" + reproductionEnergyCostInput.getText();
-        String startingEnergyValue = "STARTING_ENERGY;" + startingEnergyInput.getText();
-        String dailyEnergyCostValue = "DAILY_ENERGY_COST;" + dailyEnergyCostInput.getText();
-        String dailyPlantsGrowthValue = "DAILY_PLANTS_GROWTH;" + dailyPlantsGrowthInput.getText();
-        String energyFromPlantValue = "ENERGY_FROM_PLANT;" + energyFromPlantInput.getText();
-        String saveToCSV = "SAVE_TO_CSV;" + saveStatsToCSVCheckBox.isSelected();
-        return Arrays.asList(mapWidthValue, mapHeightValue,mapTypeValue, mutationVariantValue, genotypeLengthValue,
-                maxMutationsValue, minMutationsValue,startingPlantsValue, startingAnimalsValue,minReproductionEnergyValue,
-                reproductionEnergyCostValue, startingEnergyValue, dailyEnergyCostValue, dailyPlantsGrowthValue, energyFromPlantValue, saveToCSV);
+        List<String> strings = new LinkedList<>();
+        for (Parameter param : Parameter.values()) {
+            GetAction getter = getActions.get(param);
+            if (getter != null) {
+                strings.add(param.name()+";"+getter.get());
+            }
+        }
+        return strings;
     }
 
     @FXML
@@ -223,29 +163,67 @@ public class StartingView {
         sourceTextField.setText(Integer.toString(value));
     }
 
-
     private SimulationConfig createConfigFromInputs() {
-        HashMap<Parameter, String> params = new HashMap<>();
-        try {
-            params.put(Parameter.MAP_WIDTH, mapWidth.getText());
-            params.put(Parameter.MAP_HEIGHT, mapHeight.getText());
-            params.put(Parameter.MAP_TYPE, mapType.getValue());
-            params.put(Parameter.MUTATION_TYPE, mutationVariant.getValue());
-            params.put(Parameter.GENOTYPE_LENGTH, genotypeLengthInput.getText());
-            params.put(Parameter.MAX_MUTATIONS, maxMutationsInput.getText());
-            params.put(Parameter.MIN_MUTATIONS, minMutationsInput.getText());
-            params.put(Parameter.STARTING_PLANTS, startingPlantsInput.getText());
-            params.put(Parameter.STARTING_ANIMALS, startingAnimalsInput.getText());
-            params.put(Parameter.MIN_REPRODUCTION_ENERGY, minReproductionEnergyInput.getText());
-            params.put(Parameter.REPRODUCTION_ENERGY_COST, reproductionEnergyCostInput.getText());
-            params.put(Parameter.STARTING_ENERGY, startingEnergyInput.getText());
-            params.put(Parameter.DAILY_ENERGY_COST, dailyEnergyCostInput.getText());
-            params.put(Parameter.DAILY_PLANTS_GROWTH, dailyPlantsGrowthInput.getText());
-            params.put(Parameter.ENERGY_FROM_PLANT, energyFromPlantInput.getText());
-            params.put(Parameter.SAVE_TO_CSV, String.valueOf(saveStatsToCSVCheckBox.isSelected()));
-        } catch (NumberFormatException e) {
-            System.out.println("Incorrect values");
+        Map<Parameter, String> params = new HashMap<>();
+        for (Parameter param : Parameter.values()) {
+            GetAction getter = getActions.get(param);
+            if (getter != null) {
+                params.put(param, getter.get());
+            }
         }
         return new SimulationConfig(params);
     }
+
+    private void generateInputSetters() {
+        setAction.put(Parameter.MAP_WIDTH, mapWidth::setText);
+        setAction.put(Parameter.MAP_HEIGHT, mapHeight::setText);
+        setAction.put(Parameter.MAP_TYPE, value -> {
+            try {
+                MapType map = MapType.valueOf(value);
+                mapType.setValue(map.toString());
+            } catch (IllegalArgumentException err) {
+                System.out.println(err);
+            }
+        });
+        setAction.put(Parameter.MUTATION_TYPE, value -> {
+            try {
+                MutationVariantName variant = MutationVariantName.valueOf(value);
+                mutationVariant.setValue(variant.toString());
+            } catch (IllegalArgumentException err) {
+                System.out.println(err);
+            }
+        });
+        setAction.put(Parameter.GENOTYPE_LENGTH, genotypeLengthInput::setText);
+        setAction.put(Parameter.MAX_MUTATIONS, maxMutationsInput::setText);
+        setAction.put(Parameter.MIN_MUTATIONS, minMutationsInput::setText);
+        setAction.put(Parameter.STARTING_PLANTS, startingPlantsInput::setText);
+        setAction.put(Parameter.STARTING_ANIMALS, startingAnimalsInput::setText);
+        setAction.put(Parameter.MIN_REPRODUCTION_ENERGY, minReproductionEnergyInput::setText);
+        setAction.put(Parameter.REPRODUCTION_ENERGY_COST, reproductionEnergyCostInput::setText);
+        setAction.put(Parameter.STARTING_ENERGY, startingEnergyInput::setText);
+        setAction.put(Parameter.DAILY_ENERGY_COST, dailyEnergyCostInput::setText);
+        setAction.put(Parameter.DAILY_PLANTS_GROWTH, dailyPlantsGrowthInput::setText);
+        setAction.put(Parameter.ENERGY_FROM_PLANT, energyFromPlantInput::setText);
+        setAction.put(Parameter.SAVE_TO_CSV, value -> saveStatsToCSVCheckBox.setSelected(Boolean.parseBoolean(value)));
+    }
+
+    private void generateInputGetters() {
+        getActions.put(Parameter.MAP_WIDTH, () -> mapWidth.getText());
+        getActions.put(Parameter.MAP_HEIGHT, () -> mapHeight.getText());
+        getActions.put(Parameter.MAP_TYPE, () -> mapType.getValue());
+        getActions.put(Parameter.MUTATION_TYPE, () -> mutationVariant.getValue());
+        getActions.put(Parameter.GENOTYPE_LENGTH, () -> genotypeLengthInput.getText());
+        getActions.put(Parameter.MAX_MUTATIONS, () -> maxMutationsInput.getText());
+        getActions.put(Parameter.MIN_MUTATIONS, () -> minMutationsInput.getText());
+        getActions.put(Parameter.STARTING_PLANTS, () -> startingPlantsInput.getText());
+        getActions.put(Parameter.STARTING_ANIMALS, () -> startingAnimalsInput.getText());
+        getActions.put(Parameter.MIN_REPRODUCTION_ENERGY, () -> minReproductionEnergyInput.getText());
+        getActions.put(Parameter.REPRODUCTION_ENERGY_COST, () -> reproductionEnergyCostInput.getText());
+        getActions.put(Parameter.STARTING_ENERGY, () -> startingEnergyInput.getText());
+        getActions.put(Parameter.DAILY_ENERGY_COST, () -> dailyEnergyCostInput.getText());
+        getActions.put(Parameter.DAILY_PLANTS_GROWTH, () -> dailyPlantsGrowthInput.getText());
+        getActions.put(Parameter.ENERGY_FROM_PLANT, () -> energyFromPlantInput.getText());
+        getActions.put(Parameter.SAVE_TO_CSV, () -> String.valueOf(saveStatsToCSVCheckBox.isSelected()));
+    }
+
 }
