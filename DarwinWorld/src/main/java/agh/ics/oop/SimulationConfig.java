@@ -5,6 +5,7 @@ import agh.ics.oop.model.Config.variants.MutationVariantName;
 import agh.ics.oop.model.maps.MapType;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SimulationConfig {
 
@@ -25,7 +26,7 @@ public class SimulationConfig {
     private final int energyFromPlant;
     private final boolean saveToCSV;
 
-    public SimulationConfig(HashMap<Parameter, String> params) {
+    public SimulationConfig(Map<Parameter, String> params) {
         this.mapWidth =  Integer.parseInt(params.get(Parameter.MAP_WIDTH));
         this.mapHeight = Integer.parseInt(params.get(Parameter.MAP_HEIGHT));
         this.mapType = MapType.valueOf(params.get(Parameter.MAP_TYPE));
