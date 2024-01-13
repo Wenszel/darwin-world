@@ -68,9 +68,15 @@ public class Animal implements MapElement {
 
     @Override
     public void drawOnMap(GraphicsContext gc, double fieldWidth, double fieldHeight) {
-        gc.setFill(Color.RED);
+        double fullSaturationEnergy = 10 * dailyEnergyCost;
+        double energyRatio = (double) energy / fullSaturationEnergy;
+        energyRatio = Math.max(0, Math.min(energyRatio, 1));
+        double pinkIntensity = 1 - energyRatio;
+        double pinkComponent = pinkIntensity * 0.5;
+        gc.setFill(new Color(1.0, pinkComponent, pinkComponent, 1));
         gc.fillRect(position.getX() * fieldWidth, position.getY() * fieldHeight, fieldWidth, fieldHeight);
     }
+
     public void reproduction(Animal child) {
         this.energy-=reproductionCost;
         this.children.add(child);

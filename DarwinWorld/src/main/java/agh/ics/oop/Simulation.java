@@ -13,16 +13,14 @@ public class Simulation implements Runnable {
 
     private final List<SimulationListener>  listeners = new ArrayList<>();
     private final WorldMap map;
-    private final SimulationConfig config;
-    private int dayCounter = 1;
-    private double deadAnimalsAverageLifeLength;
+    private final DayManager dayManager;
     private volatile boolean paused = false;
     private final Object pauseLock = new Object();
 
     public Simulation(SimulationConfig config) {
-        this.config = config;
         this.map = MapFactory.createMap(config);
         map.initializeMap();
+        this.dayManager = new DayManager(this.map, config);
     }
 
     @Override
@@ -39,7 +37,7 @@ public class Simulation implements Runnable {
                     }
                 }
             }
-            runDay();
+            dayManager.runDay();
             mapChanged("Day ended");
             try {
                 Thread.sleep(100);
@@ -48,6 +46,7 @@ public class Simulation implements Runnable {
             }
         }
     }
+
     public void pause() {
         paused = true;
     }
@@ -59,15 +58,6 @@ public class Simulation implements Runnable {
         }
     }
 
-    public void runDay() {
-        deadAnimalsAverageLifeLength = map.removeDeadAnimals(dayCounter);
-        map.moveAnimals();
-        map.consumePlants();
-        map.reproduceAnimals();
-        map.growPlants(config.getDailyPlantsGrowth());
-        dayCounter+=1;
-    }
-
     public void addSubscriber(SimulationListener listener) {
         listeners.add(listener);
     }
@@ -75,21 +65,22 @@ public class Simulation implements Runnable {
     public void removeSubscriber(SimulationListener listener) {
         listeners.remove(listener);
     }
+
     private void mapChanged(String message) {
         for(SimulationListener listener : listeners) {
             listener.refreshSimulation(message);
         }
     }
 
+    public DayManager getDayManager() {
+        return dayManager;
+    }
+
     public WorldMap getMap() {
         return map;
     }
 
-    public int getDayCounter() {
-        return dayCounter;
-    }
-
-    public double getDeadAnimalsAverageLifeLength() {
-        return deadAnimalsAverageLifeLength;
+    public boolean isPaused() {
+        return paused;
     }
 }

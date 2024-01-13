@@ -197,9 +197,14 @@ public class GlobeMap implements WorldMap {
     }
 
     @Override
+    public int getNumberOfAnimals() {
+        return animals.size();
+    }
+
+    @Override
     public List<KeyValue<Genotype, Integer>> getMostPopularGenotypes() {
         List<KeyValue<Genotype, Integer>> mostPopularGenotypesCopy = new LinkedList<>(mostPopularGenotypes);
         Collections.reverse(mostPopularGenotypesCopy);
-       return mostPopularGenotypesCopy;
+        return mostPopularGenotypesCopy;
     }
 }

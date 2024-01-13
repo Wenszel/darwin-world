@@ -7,12 +7,14 @@ import agh.ics.oop.model.mapElements.*;
 import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.stats.MapStatisticsCollector;
 import agh.ics.oop.model.stats.SimulationStatisticsBuilder;
+import agh.ics.oop.model.utils.Genotype;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -34,15 +36,20 @@ public class SimulationView implements SimulationListener {
     @FXML
     private VBox animalStatsBox;
     private AnimalStatsView animalStatsView;
+    @FXML
+    private LineChart<Integer, Integer> populationChart;
+    private ChartView chartView;
     private Animal observedAnimal;
     private Simulation simulation;
     private boolean isPreferableShown = false;
+    private boolean isDominantGenotypeShown = false;
 
     public void init(SimulationConfig config) {
         simulation = new Simulation(config);
         simulation.addSubscriber(this);
         simulationStatsView = new SimulationStatsView(simulationStatsBox);
         animalStatsView = new AnimalStatsView(animalStatsBox);
+        chartView = new ChartView(populationChart, simulation.getDayManager());
         Thread simulationTask = new Thread(simulation);
         simulationTask.start();
     }
@@ -71,8 +78,7 @@ public class SimulationView implements SimulationListener {
             MapField mapField = mapFields.get(position);
             if (!mapField.getAnimalsOnField().isEmpty()) {
                 mapStatisticsCollector.collectAnimalsData(mapField);
-                Animal strongestAnimal = mapField.getAnimalsOnField().get(0);
-                strongestAnimal.drawOnMap(gc, fieldWidth, fieldHeight);
+                drawAnimalOnMap(mapField, gc, fieldWidth, fieldHeight);
             } else if (mapFields.get(position).getHasPlant()) {
                 mapStatisticsCollector.increasePlantsAmount();
                 mapField.getPlant().drawOnMap(gc, fieldWidth, fieldHeight);
@@ -93,10 +99,24 @@ public class SimulationView implements SimulationListener {
         simulationStatsView.showSimulationStats(
                 new SimulationStatisticsBuilder()
                     .collectMapStatistics(mapStatisticsCollector)
-                    .setCurrentDay(simulation.getDayCounter())
-                    .setAverageDeadAnimalsLifeLength(simulation.getDeadAnimalsAverageLifeLength())
+                    .setCurrentDay(simulation.getDayManager().getDay())
+                    .setAverageDeadAnimalsLifeLength(simulation.getDayManager().getDeadAnimalsAverageLifeLength())
                     .setMostPopularGenotypes(simulation.getMap().getMostPopularGenotypes())
                     .build());
+    }
+
+    private void drawAnimalOnMap(MapField mapField, GraphicsContext gc, double fieldWidth, double fieldHeight) {
+        if (isDominantGenotypeShown) {
+            Genotype mostPopularGenotype = simulation.getMap().getMostPopularGenotypes().get(0).getKey();
+            for (Animal animal: mapField.getAnimalsOnField()) {
+                if (animal.getGenotype().equals(mostPopularGenotype)) {
+                    animal.drawOnMap(gc, fieldWidth, fieldHeight);
+                    return;
+                }
+            }
+        } else {
+            mapField.getAnimalsOnField().get(0).drawOnMap(gc, fieldWidth, fieldHeight);
+        }
     }
 
     private void clearView() {
@@ -123,6 +143,7 @@ public class SimulationView implements SimulationListener {
             @Override
             public Void call() {
                 drawSimulationWindow();
+                chartView.addDayDataToChart();
                 return null;
             }
         };
@@ -136,11 +157,20 @@ public class SimulationView implements SimulationListener {
     public void resume() {
         simulation.resume();
         isPreferableShown = false;
+        isDominantGenotypeShown = false;
     }
 
     public void handlePreferableFieldsDisplay() {
+        if (simulation.isPaused()) {
+            isPreferableShown = !isPreferableShown;
+            drawSimulationWindow();
+        }
+    }
 
-        isPreferableShown = !isPreferableShown;
-        drawSimulationWindow();
+    public void handleDominantGenotypeDisplay() {
+        if (simulation.isPaused()) {
+            isDominantGenotypeShown = !isDominantGenotypeShown;
+            drawSimulationWindow();
+        }
     }
 }

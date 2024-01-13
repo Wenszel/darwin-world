@@ -61,6 +61,7 @@ public class StartingView {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("views/simulationView.fxml"));
         Scene scene = new Scene(loader.load());
+        scene.getStylesheets().add("views/simulationView.css");
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setMaximized(true);
