@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.StrokeType;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -24,11 +25,12 @@ public class Animal implements MapElement {
     private int energy;
     private final Genotype genotype;
     private final Direction direction;
-
     private final int dailyEnergyCost;
     private final int reproductionCost;
     private final int energyFromPlant;
     private final LinkedList<Animal> children = new LinkedList<>();
+    private final LinkedList<Animal> parents = new LinkedList<>();
+    private int descendants = 0;
     private int dayAlive = 0;
     private int deathDay;
     private int eatenPlants = 0;
@@ -48,6 +50,9 @@ public class Animal implements MapElement {
         this.position = position;
         this.energy = 2*config.getReproductionCost();
         this.genotype = new Genotype(config.getGenotypeLength(), strongerParent, weakerParent, config.getMinMutations(), config.getMaxMutations(), config.getMutationVariant());
+        this.parents.add(strongerParent);
+        this.parents.add(weakerParent);
+        this.parents.forEach(Animal::increaseDescendants);
         this.dailyEnergyCost = config.getDailyEnergyCost();
         this.reproductionCost=config.getReproductionCost();
         this.energyFromPlant = config.getEnergyFromPlant();
@@ -60,6 +65,11 @@ public class Animal implements MapElement {
         this.position = calculatePosition(destination, rightBottomCorner);
         this.energy-=this.dailyEnergyCost;
         this.dayAlive+=1;
+    }
+
+    private void increaseDescendants() {
+        descendants += 1;
+        parents.forEach(Animal::increaseDescendants);
     }
 
     public Vector2d getPosition() {
@@ -93,9 +103,7 @@ public class Animal implements MapElement {
     public int getEnergy() {
         return energy;
     }
-    public void addEnergy(int amount) {
-        this.energy+=amount;
-    }
+
     public Genotype getGenotype() {
         return genotype;
     }
@@ -119,23 +127,22 @@ public class Animal implements MapElement {
         this.deathDay = dayCounter;
     }
     public int getDescendants() {
-        //TODO
-        //Something is wrong with this method
-//        Set<Animal> animals = new HashSet<>(children);
-//        int amount = animals.size();
-//        for(Animal child : animals) {
-//                amount += child.getDescendants();
-//        }
-//        return amount;
-        return 10;
+        return descendants;
     }
     public int getChildrenAmount() {
         return children.size();
     }
     public AnimalStatistics getAnimalStats()  {
-        return new AnimalStatisticsBuilder().setGenotype(genotype).setCurrentActiveGene(genotype.getCurrentGene())
-                .setEnergy(energy).setEatenPlants(eatenPlants).setChildrenAmount(children.size()).setDescendantAmount(getDescendants())
-                .setDayAlive(dayAlive).setDeathDay(deathDay).build();
+        return new AnimalStatisticsBuilder()
+                .setGenotype(genotype)
+                .setCurrentActiveGene(genotype.getCurrentGene())
+                .setEnergy(energy)
+                .setEatenPlants(eatenPlants)
+                .setChildrenAmount(children.size())
+                .setDescendantAmount(getDescendants())
+                .setDayAlive(dayAlive)
+                .setDeathDay(deathDay)
+                .build();
     }
 
     public int getDayAlive() {
