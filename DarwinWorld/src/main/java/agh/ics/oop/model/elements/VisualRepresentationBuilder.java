@@ -1,4 +1,4 @@
-package agh.ics.oop.model.mapElements;
+package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.Builder;
 import javafx.scene.image.Image;

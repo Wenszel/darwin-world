@@ -1,4 +1,4 @@
-package agh.ics.oop.model.Config;
+package agh.ics.oop.model.config;
 
 public enum Parameter {
     MAP_WIDTH,

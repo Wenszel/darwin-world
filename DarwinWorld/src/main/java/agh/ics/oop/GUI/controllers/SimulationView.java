@@ -3,7 +3,7 @@ package agh.ics.oop.GUI.controllers;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationConfig;
 import agh.ics.oop.model.SimulationListener;
-import agh.ics.oop.model.mapElements.*;
+import agh.ics.oop.model.elements.*;
 import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.stats.MapStatisticsCollector;
 import agh.ics.oop.model.stats.SimulationStatistics;

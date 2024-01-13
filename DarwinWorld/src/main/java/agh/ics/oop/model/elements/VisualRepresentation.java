@@ -1,4 +1,4 @@
-package agh.ics.oop.model.mapElements;
+package agh.ics.oop.model.elements;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

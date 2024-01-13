@@ -1,11 +1,8 @@
-package agh.ics.oop.model.mapElements;
+package agh.ics.oop.model.elements;
 
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeType;
 
 public class Tunnel implements MapElement {
     Vector2d position;

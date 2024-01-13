@@ -1,6 +1,6 @@
 package agh.ics.oop.GUI.controllers;
 
-import agh.ics.oop.model.mapElements.Animal;
+import agh.ics.oop.model.elements.Animal;
 import agh.ics.oop.model.stats.AnimalStatistics;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;

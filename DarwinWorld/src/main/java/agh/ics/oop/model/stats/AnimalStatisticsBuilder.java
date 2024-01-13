@@ -1,10 +1,7 @@
 package agh.ics.oop.model.stats;
 
 import agh.ics.oop.model.Builder;
-import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.utils.Genotype;
-
-import java.util.List;
 
 public class AnimalStatisticsBuilder implements Builder<AnimalStatistics> {
     private Genotype genotype;

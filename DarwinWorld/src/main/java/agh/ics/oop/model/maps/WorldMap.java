@@ -1,7 +1,7 @@
 package agh.ics.oop.model.maps;
 
-import agh.ics.oop.model.mapElements.MapElement;
-import agh.ics.oop.model.mapElements.MapField;
+import agh.ics.oop.model.elements.MapElement;
+import agh.ics.oop.model.elements.MapField;
 import agh.ics.oop.model.utils.Genotype;
 import agh.ics.oop.model.utils.KeyValue;
 import agh.ics.oop.model.utils.Vector2d;

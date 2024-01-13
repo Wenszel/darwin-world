@@ -1,7 +1,7 @@
 package agh.ics.oop.model.maps.generators;
 
-import agh.ics.oop.model.mapElements.MapField;
-import agh.ics.oop.model.mapElements.Tunnel;
+import agh.ics.oop.model.elements.MapField;
+import agh.ics.oop.model.elements.Tunnel;
 import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.LinkedList;

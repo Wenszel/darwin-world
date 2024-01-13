@@ -1,4 +1,4 @@
-package agh.ics.oop.model.Config.variants;
+package agh.ics.oop.model.config.variants;
 
 public enum MutationVariantName {
     SWAP,

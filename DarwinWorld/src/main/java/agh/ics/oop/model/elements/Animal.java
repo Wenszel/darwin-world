@@ -1,7 +1,6 @@
-package agh.ics.oop.model.mapElements;
+package agh.ics.oop.model.elements;
 
 import agh.ics.oop.SimulationConfig;
-import agh.ics.oop.model.maps.WorldMap;
 import agh.ics.oop.model.stats.AnimalStatistics;
 import agh.ics.oop.model.stats.AnimalStatisticsBuilder;
 import agh.ics.oop.model.utils.Direction;
@@ -10,13 +9,8 @@ import agh.ics.oop.model.utils.Genotype;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeType;
 
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 
 public class Animal implements MapElement {

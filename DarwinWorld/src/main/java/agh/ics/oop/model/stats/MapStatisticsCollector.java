@@ -1,7 +1,7 @@
 package agh.ics.oop.model.stats;
 
-import agh.ics.oop.model.mapElements.Animal;
-import agh.ics.oop.model.mapElements.MapField;
+import agh.ics.oop.model.elements.Animal;
+import agh.ics.oop.model.elements.MapField;
 
 public class MapStatisticsCollector {
     private int animalsAmount = 0;
