@@ -5,6 +5,7 @@ import agh.ics.oop.model.Config.variants.MutationVariantName;
 import agh.ics.oop.model.maps.MapType;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SimulationConfig {
 
@@ -23,9 +24,9 @@ public class SimulationConfig {
     private final int dailyEnergyCost;
     private final int dailyPlantsGrowth;
     private final int energyFromPlant;
+    private final boolean saveToCSV;
 
-
-    public SimulationConfig(HashMap<Parameter, String> params) {
+    public SimulationConfig(Map<Parameter, String> params) {
         this.mapWidth =  Integer.parseInt(params.get(Parameter.MAP_WIDTH));
         this.mapHeight = Integer.parseInt(params.get(Parameter.MAP_HEIGHT));
         this.mapType = MapType.valueOf(params.get(Parameter.MAP_TYPE));
@@ -41,6 +42,7 @@ public class SimulationConfig {
         this.dailyEnergyCost = Integer.parseInt(params.get(Parameter.DAILY_ENERGY_COST));
         this.dailyPlantsGrowth = Integer.parseInt(params.get(Parameter.DAILY_PLANTS_GROWTH));
         this.energyFromPlant = Integer.parseInt(params.get(Parameter.ENERGY_FROM_PLANT));
+        this.saveToCSV = Boolean.parseBoolean(params.get(Parameter.SAVE_TO_CSV));
     }
 
 
@@ -102,5 +104,8 @@ public class SimulationConfig {
 
     public int getEnergyFromPlant() {
         return energyFromPlant;
+    }
+    public boolean getSaveToCSV() {
+        return saveToCSV;
     }
 }

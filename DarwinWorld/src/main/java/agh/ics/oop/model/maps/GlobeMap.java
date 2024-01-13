@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GlobeMap implements WorldMap {
+    protected UUID id;
     protected final Map<Vector2d, MapField> mapFields = new HashMap<>();
     protected final List<Animal> animals = new LinkedList<>();
     protected int deadAnimalsCounter = 0;
@@ -25,10 +26,10 @@ public class GlobeMap implements WorldMap {
     Map<Genotype, Integer> genotypeCounts = new HashMap<>();
     List<KeyValue<Genotype, Integer>> mostPopularGenotypes = new LinkedList<>();
     public GlobeMap(SimulationConfig config) {
+        this.id = UUID.randomUUID();
         this.config = config;
         this.width = config.getMapWidth();
         this.height = config.getMapHeight();
-
     }
 
     @Override
@@ -206,5 +207,10 @@ public class GlobeMap implements WorldMap {
         List<KeyValue<Genotype, Integer>> mostPopularGenotypesCopy = new LinkedList<>(mostPopularGenotypes);
         Collections.reverse(mostPopularGenotypesCopy);
         return mostPopularGenotypesCopy;
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
     }
 }
