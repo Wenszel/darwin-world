@@ -3,8 +3,6 @@ package agh.ics.oop;
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.factories.MapFactory;
 import agh.ics.oop.model.maps.WorldMap;
-import agh.ics.oop.model.stats.SimulationStatistics;
-import agh.ics.oop.model.stats.SimulationStatisticsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +11,7 @@ public class Simulation implements Runnable {
 
     private final List<SimulationListener>  listeners = new ArrayList<>();
     private final WorldMap map;
+    private int simulationSpeed = 100;
     private final DayManager dayManager;
     private volatile boolean paused = false;
     private final Object pauseLock = new Object();
@@ -40,7 +39,7 @@ public class Simulation implements Runnable {
             dayManager.runDay();
             mapChanged("Day ended");
             try {
-                Thread.sleep(100);
+                Thread.sleep(simulationSpeed);
             } catch(InterruptedException err) {
                 break;
             }
@@ -82,5 +81,12 @@ public class Simulation implements Runnable {
 
     public boolean isPaused() {
         return paused;
+    }
+
+    public void increaseSimulationSpeed() {
+        simulationSpeed = Math.max(simulationSpeed - 10, 10);
+    }
+    public void decreaseSimulationSpeed() {
+        simulationSpeed = simulationSpeed + 20;
     }
 }

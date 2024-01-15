@@ -72,7 +72,7 @@ public class StartingView {
 
         SimulationView simulationController = loader.getController();
         SimulationConfig config = createConfigFromInputs();
-        simulationController.init(config);
+        simulationController.init(config, stage);
     }
 
     @FXML

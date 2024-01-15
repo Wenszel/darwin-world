@@ -32,7 +32,4 @@ public class DayManager {
         return deadAnimalsAverageLifeLength;
     }
 
-    public int getPopulation() {
-        return population;
-    }
 }
