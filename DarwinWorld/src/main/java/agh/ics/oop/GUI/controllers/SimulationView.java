@@ -48,7 +48,7 @@ public class SimulationView implements SimulationListener {
     private boolean isSavingToCSVTurnedOn = false;
     private StatsFileManager statsFileManager;
 
-    public void init(SimulationConfig config) {
+    public void init(SimulationConfig config, Stage stage) {
         simulation = new Simulation(config);
         simulation.addSubscriber(this);
         simulationStatsView = new SimulationStatsView(simulationStatsBox);
@@ -60,6 +60,9 @@ public class SimulationView implements SimulationListener {
         }
         Thread simulationTask = new Thread(simulation);
         simulationTask.start();
+        stage.setOnCloseRequest(event -> {
+            simulationTask.interrupt();
+        });
     }
 
     private void handleCanvasClick(MouseEvent event, double fieldWidth, double fieldHeight, Map<Vector2d, MapField> mapFields) {
@@ -111,6 +114,7 @@ public class SimulationView implements SimulationListener {
                 .setMostPopularGenotypes(simulation.getMap().getMostPopularGenotypes())
                 .build();
         simulationStatsView.showSimulationStats(stats);
+        chartView.addDayDataToChart(stats.getAnimalsAmount(), stats.getPlantsAmount());
         if (isSavingToCSVTurnedOn) {
             statsFileManager.save(stats);
         }
@@ -154,7 +158,6 @@ public class SimulationView implements SimulationListener {
             @Override
             public Void call() {
                 drawSimulationWindow();
-                chartView.addDayDataToChart();
                 return null;
             }
         };
@@ -182,6 +185,16 @@ public class SimulationView implements SimulationListener {
         if (simulation.isPaused()) {
             isDominantGenotypeShown = !isDominantGenotypeShown;
             drawSimulationWindow();
+        }
+    }
+    public void speedUpSimulation() {
+        if(!simulation.isPaused()) {
+            simulation.increaseSimulationSpeed();
+        }
+    }
+    public void slowDownSimulation() {
+        if(!simulation.isPaused()) {
+            simulation.decreaseSimulationSpeed();
         }
     }
 }

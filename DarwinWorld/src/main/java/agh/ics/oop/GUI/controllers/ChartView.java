@@ -5,17 +5,22 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
 public class ChartView {
-    private final XYChart.Series<Integer, Integer> series;
+    private final XYChart.Series<Integer, Integer> animalSeries;
+    private final XYChart.Series<Integer, Integer> grassSeries;
     private final DayManager dayManager;
 
     public ChartView(LineChart<Integer, Integer> populationChart, DayManager dayManager) {
-        series = new XYChart.Series<>();
+
         populationChart.setLegendVisible(false);
-        populationChart.getData().add(series);
+        animalSeries = new XYChart.Series<>();
+        grassSeries = new XYChart.Series<>();
+        populationChart.getData().add(animalSeries);
+        populationChart.getData().add(grassSeries);
         this.dayManager = dayManager;
     }
 
-    public void addDayDataToChart() {
-        series.getData().add(new XYChart.Data<>(dayManager.getDay(), dayManager.getPopulation()));
+    public void addDayDataToChart(int animalAmount, int grassAmount) {
+        animalSeries.getData().add(new XYChart.Data<>(dayManager.getDay(), animalAmount));
+        grassSeries.getData().add(new XYChart.Data<>(dayManager.getDay(), grassAmount));
     }
 }

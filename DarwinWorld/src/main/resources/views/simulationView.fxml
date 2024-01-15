@@ -39,6 +39,8 @@
                 <Button onAction="#resume">Resume</Button>
                 <Button onAction="#handlePreferableFieldsDisplay">Show preferable</Button>
                 <Button onAction="#handleDominantGenotypeDisplay">Show animals with dominant genotype</Button>
+                <Button onAction="#speedUpSimulation">Speed up</Button>
+                <Button onAction="#slowDownSimulation">Slow down</Button>
             </VBox>
         </SplitPane>
     </right>
