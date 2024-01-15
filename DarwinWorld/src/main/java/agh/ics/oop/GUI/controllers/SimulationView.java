@@ -67,10 +67,21 @@ public class SimulationView implements SimulationListener {
 
     private void handleCanvasClick(MouseEvent event, double fieldWidth, double fieldHeight, Map<Vector2d, MapField> mapFields) {
         Vector2d clickedPosition = new Vector2d((int) (event.getX() / fieldWidth), (int) (event.getY() / fieldHeight));
-        if(mapFields.get(clickedPosition) !=null && !mapFields.get(clickedPosition).getAnimalsOnField().isEmpty()) {
-            this.observedAnimal = mapFields.get(clickedPosition).getAnimalsOnField().get(0);
+        if (mapFields.get(clickedPosition) != null && mapFields.get(clickedPosition).getAnimalsOnField() != null) {
+            if (observedAnimal != null) {
+                // It is faster to unmark all animals from list of animals
+                // than unmark the same way as mark (i mean recursively)
+                // we do not need to unmark dead animals because they can no longer reproduce
+               simulation.getMap().unmarkAllAnimalsAsDescendants();
+            }
+            observedAnimal = mapFields.get(clickedPosition).getAnimalsOnField().get(0);
+            // Added additional thread to avoid freezing the GUI to calculate descendants if there are to many of them
+            Thread thread = new Thread(() -> {
+                observedAnimal.markAsDescendant(observedAnimal);
+                Platform.runLater(() -> animalStatsView.showAnimalStats(observedAnimal));
+            });
+            thread.start();
         }
-        animalStatsView.showAnimalStats(observedAnimal);
     }
 
     public void drawSimulationWindow() {

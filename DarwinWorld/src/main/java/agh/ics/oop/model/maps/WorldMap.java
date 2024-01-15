@@ -23,7 +23,6 @@ public interface WorldMap {
     void consumePlants();
     void growPlants(int amount);
     int getNumberOfAnimals();
+    void unmarkAllAnimalsAsDescendants();
     List<KeyValue<Genotype, Integer>> getMostPopularGenotypes();
-
-
 }

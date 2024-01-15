@@ -210,6 +210,11 @@ public class GlobeMap implements WorldMap {
     }
 
     @Override
+    public void unmarkAllAnimalsAsDescendants() {
+        animals.forEach(Animal::unmarkAsDescendant);
+    }
+
+    @Override
     public UUID getId() {
         return id;
     }
