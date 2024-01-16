@@ -33,7 +33,7 @@ public class AnimalStatsView {
         tableView.getColumns().addAll(statNameColumn, statValueColumn);
     }
 
-    public void showAnimalStats(Animal animal) {
+    public void showAnimalStats(Animal animal, boolean isDescendantsLoading) {
         animalStatsBox.getChildren().clear();
 
         AnimalStatistics stats = animal.getAnimalStats();
@@ -44,7 +44,11 @@ public class AnimalStatsView {
         statsMap.put("Energy", String.valueOf(stats.getEnergy()));
         statsMap.put("Eaten plants", String.valueOf(stats.getEatenPlants()));
         statsMap.put("Children amount", String.valueOf(stats.getChildrenAmount()));
-        statsMap.put("Descendant amount", String.valueOf(stats.getDescendantAmount()));
+        if (isDescendantsLoading) {
+            statsMap.put("Descendant amount", "Loading...");
+        } else {
+            statsMap.put("Descendant amount", String.valueOf(stats.getDescendantAmount()));
+        }
         statsMap.put("Day alive", String.valueOf(stats.getDayAlive()));
         statsMap.put("Death day", stats.getDeathDay() == 0 ? "Still alive" : String.valueOf(stats.getDeathDay()));
 

@@ -75,7 +75,11 @@ public class Animal implements MapElement {
         energyRatio = Math.max(0, Math.min(energyRatio, 1));
         double pinkIntensity = 1 - energyRatio;
         double pinkComponent = pinkIntensity * 0.5;
-        gc.setFill(new Color(1.0, pinkComponent, pinkComponent, 1));
+        if (this.equals(alfaAnimal)) {
+            gc.setFill(Color.GOLD);
+        } else {
+            gc.setFill(new Color(1.0, pinkComponent, pinkComponent, 1));
+        }
         gc.fillRect(position.getX() * fieldWidth, position.getY() * fieldHeight, fieldWidth, fieldHeight);
     }
 
