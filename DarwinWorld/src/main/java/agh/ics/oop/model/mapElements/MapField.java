@@ -1,16 +1,15 @@
 package agh.ics.oop.model.mapElements;
 
-import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.utils.AnimalComparator;
 import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MapField {
     private final SimulationConfig config;
-    private LinkedList<Animal> animalsOnField = new LinkedList();
-    private boolean isPreferred;
+    private final LinkedList<Animal> animalsOnField = new LinkedList();
+    private final boolean isPreferred;
     private final Vector2d fieldPosition;
     private Plant plant;
     private boolean hasPlant = false;
@@ -33,23 +32,15 @@ public class MapField {
         return Collections.unmodifiableList(animalsOnField);
     }
 
-    public List<MapElement> getElementsOnField() {
-        List<MapElement> elements = new LinkedList<>(getAnimalsOnField());
-        if (plant != null) {
-            elements.add(plant);
-        }
-        return elements;
-    }
-
     public boolean isPreferred() {
         return isPreferred;
     }
 
     public Optional<MapField> consumePlant() {
         Optional<Animal> strongestAnimal = animalsOnField.stream().max(new AnimalComparator());
-        if(strongestAnimal.isPresent()) {
+        if(strongestAnimal.isPresent() && this.hasPlant) {
             Animal animal = strongestAnimal.get();
-            animal.addEnergy(config.getEnergyFromPlant());
+            animal.consumePlant();
             this.hasPlant = false;
             this.plant = null;
             return Optional.of(this);
@@ -64,11 +55,12 @@ public class MapField {
         if(animalsOnField.size() >= 2) {
             List<Animal> parents = findParents();
             if(parents.get(1).getEnergy() >= config.getMinReproductionEnergy()) {
-                Animal children = new Animal(this.fieldPosition, config,parents.get(0), parents.get(1));
-                parents.get(0).addEnergy(-config.getReproductionCost());
-                parents.get(1).addEnergy(-config.getReproductionCost());
-                animalsOnField.add(children);
-                return Optional.of(children);
+                Animal child = new Animal(this.fieldPosition, config,parents.get(0), parents.get(1));
+                parents.get(0).reproduction(child);
+                parents.get(1).reproduction(child);
+
+                animalsOnField.add(child);
+                return Optional.of(child);
             }
         }
 
@@ -84,5 +76,9 @@ public class MapField {
 
     public boolean getHasPlant() {
         return hasPlant;
+    }
+
+    public Plant getPlant() {
+        return plant;
     }
 }

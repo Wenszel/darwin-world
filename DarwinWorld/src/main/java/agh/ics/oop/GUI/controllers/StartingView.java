@@ -1,12 +1,13 @@
 package agh.ics.oop.GUI.controllers;
 
-import agh.ics.oop.SimulationConfig;
-import agh.ics.oop.model.Config.Parameter;
-import agh.ics.oop.model.Config.variants.MutationVariantName;
+import agh.ics.oop.model.config.SimulationConfig;
+import agh.ics.oop.model.config.Parameter;
+import agh.ics.oop.model.config.variants.MutationVariantName;
 import agh.ics.oop.model.maps.MapType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.fxml.FXMLLoader;
@@ -18,9 +19,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class StartingView {
     @FXML private AnchorPane rootPane;
@@ -31,6 +30,8 @@ public class StartingView {
     @FXML private TextField genotypeLengthInput;
     @FXML private TextField maxMutationsInput;
     @FXML private TextField minMutationsInput;
+    @FXML private TextField startingPlantsInput;
+    @FXML private TextField startingAnimalsInput;
     @FXML private TextField minReproductionEnergyInput;
     @FXML private TextField reproductionEnergyCostInput;
     @FXML private TextField startingEnergyInput;
@@ -39,6 +40,9 @@ public class StartingView {
     @FXML private TextField energyFromPlantInput;
     @FXML private Button loadFromCSVButton;
     @FXML private Button saveToCSVButton;
+    @FXML private CheckBox saveStatsToCSVCheckBox;
+    private final Map<Parameter, InputElement> inputElements = new HashMap<>();
+
     public void init() {
         Image backgroundImage = new Image("/images/background.jpg");
         BackgroundImage background = new BackgroundImage(backgroundImage,
@@ -51,22 +55,24 @@ public class StartingView {
         for (MutationVariantName type : MutationVariantName.values()) {
             mutationVariant.getItems().add(type.toString());
         }
+        generateInputElements();
     }
 
     public void onSimulationStartClicked() throws Exception {
-
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("views/simulationView.fxml"));
-        Scene scene = new Scene(loader.load(), 1000, 800);
+        Scene scene = new Scene(loader.load());
+        scene.getStylesheets().add("views/simulationView.css");
         Stage stage = new Stage();
-
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
 
         SimulationView simulationController = loader.getController();
         SimulationConfig config = createConfigFromInputs();
-        simulationController.init(config);
+        simulationController.init(config, stage);
     }
+
     @FXML
     private void load() {
         FileChooser fileChooser = new FileChooser();
@@ -83,59 +89,16 @@ public class StartingView {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] values = line.split(";");
-                    switch (values[0]) {
-                        case "MAP_WIDTH":
-                            mapWidth.setText(values[1]);
-                            break;
-                        case "MAP_HEIGHT":
-                            mapHeight.setText(values[1]);
-                            break;
-                        case "MAP_TYPE":
-                            try {
-                                MapType map = MapType.valueOf(values[1]);
-                                mapType.setValue(map.toString());
-                            }catch (IllegalArgumentException err){
-                                System.out.println(err);
-                            };
-                            break;
-                        case "MUTATION_VARIANT":
-                            try {
-                                MutationVariantName variant = MutationVariantName.valueOf(values[1]);
-                                mutationVariant.setValue(variant.toString());
-                            }catch (IllegalArgumentException err){
-                                System.out.println(err);
-                            };
-                            break;
-                        case "GENOTYPE_LENGTH":
-                            genotypeLengthInput.setText(values[1]);
-                            break;
-                        case "MAX_MUTATIONS":
-                            maxMutationsInput.setText(values[1]);
-                            break;
-                        case "MIN_MUTATIONS":
-                            minMutationsInput.setText(values[1]);
-                            break;
-                        case "MIN_REPRODUCTION_ENERGY":
-                            minReproductionEnergyInput.setText(values[1]);
-                            break;
-                        case "REPRODUCTION_ENERGY_COST":
-                            reproductionEnergyCostInput.setText(values[1]);
-                            break;
-                        case "STARTING_ENERGY":
-                            startingEnergyInput.setText(values[1]);
-                            break;
-                        case "DAILY_ENERGY_COST":
-                            dailyEnergyCostInput.setText(values[1]);
-                            break;
-                        case "DAILY_PLANTS_GROWTH":
-                            dailyPlantsGrowthInput.setText(values[1]);
-                            break;
-                        case "ENERGY_FROM_PLANT":
-                            energyFromPlantInput.setText(values[1]);
-                            break;
-                        default:
+                    try {
+                        Parameter param = Parameter.valueOf(values[0]);
+                        InputElement inputElement = inputElements.get(param);
+                        if (inputElement != null) {
+                            inputElement.set(values[1]);
+                        } else {
                             System.out.println("Unknown param: " + values[0]);
-                            break;
+                        }
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Invalid parameter name: " + values[0]);
                     }
                 }
             } catch (IOException e) {
@@ -146,7 +109,7 @@ public class StartingView {
 
     @FXML
     private void save() {
-        List<String> lines = getStrings();
+        List<String> lines = getStringsWithParametersAndValues();
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save to CSV");
@@ -168,25 +131,13 @@ public class StartingView {
         }
     }
 
-    private List<String> getStrings() {
-        String mapWidthValue = "MAP_WIDTH;" + mapWidth.getText();
-        String mapHeightValue = "MAP_HEIGHT;" + mapHeight.getText();
-        String mapTypeValue = "MAP_TYPE;" + mapType.getValue();
-        String genotypeLengthValue = "GENOTYPE_LENGTH;" + genotypeLengthInput.getText();
-        String mutationVariantValue = "MUTATION_VARIANT;" + mutationVariant.getValue();
-        String maxMutationsValue = "MAX_MUTATIONS;" + maxMutationsInput.getText();
-        String minMutationsValue = "MIN_MUTATIONS;" + minMutationsInput.getText();
-        String minReproductionEnergyValue = "MIN_REPRODUCTION_ENERGY;" + minReproductionEnergyInput.getText();
-        String reproductionEnergyCostValue = "REPRODUCTION_ENERGY_COST;" + reproductionEnergyCostInput.getText();
-        String startingEnergyValue = "STARTING_ENERGY;" + startingEnergyInput.getText();
-        String dailyEnergyCostValue = "DAILY_ENERGY_COST;" + dailyEnergyCostInput.getText();
-        String dailyPlantsGrowthValue = "DAILY_PLANTS_GROWTH;" + dailyPlantsGrowthInput.getText();
-        String energyFromPlantValue = "ENERGY_FROM_PLANT;" + energyFromPlantInput.getText();
-
-        List<String> lines = Arrays.asList(mapWidthValue, mapHeightValue,mapTypeValue, mutationVariantValue, genotypeLengthValue,
-                maxMutationsValue, minMutationsValue,minReproductionEnergyValue,
-                reproductionEnergyCostValue, startingEnergyValue, dailyEnergyCostValue, dailyPlantsGrowthValue, energyFromPlantValue);
-        return lines;
+    private List<String> getStringsWithParametersAndValues() {
+        List<String> strings = new LinkedList<>();
+        for (Parameter param : Parameter.values()) {
+            InputElement inputElement = inputElements.get(param);
+            strings.add(param.name()+";"+inputElement.get());
+        }
+        return strings;
     }
 
     @FXML
@@ -208,26 +159,32 @@ public class StartingView {
         sourceTextField.setText(Integer.toString(value));
     }
 
-
     private SimulationConfig createConfigFromInputs() {
-        HashMap<Parameter, String> params = new HashMap<>();
-        try {
-            params.put(Parameter.MAP_WIDTH, mapWidth.getText());
-            params.put(Parameter.MAP_HEIGHT, mapHeight.getText());
-            params.put(Parameter.MAP_TYPE, mapType.getValue());
-            params.put(Parameter.MUTATION_TYPE, mutationVariant.getValue());
-            params.put(Parameter.GENOTYPE_LENGTH, genotypeLengthInput.getText());
-            params.put(Parameter.MAX_MUTATIONS, maxMutationsInput.getText());
-            params.put(Parameter.MIN_MUTATIONS, minMutationsInput.getText());
-            params.put(Parameter.MIN_REPRODUCTION_ENERGY, minReproductionEnergyInput.getText());
-            params.put(Parameter.REPRODUCTION_ENERGY_COST, reproductionEnergyCostInput.getText());
-            params.put(Parameter.STARTING_ENERGY, startingEnergyInput.getText());
-            params.put(Parameter.DAILY_ENERGY_COST, dailyEnergyCostInput.getText());
-            params.put(Parameter.DAILY_PLANTS_GROWTH, dailyPlantsGrowthInput.getText());
-            params.put(Parameter.ENERGY_FROM_PLANT, energyFromPlantInput.getText());
-        } catch (NumberFormatException e) {
-            System.out.println("Incorrect values");
+        Map<Parameter, String> params = new HashMap<>();
+        for (Parameter param : Parameter.values()) {
+            InputElement inputElement = inputElements.get(param);
+            params.put(param, inputElement.get());
         }
         return new SimulationConfig(params);
     }
+
+    private void generateInputElements() {
+        inputElements.put(Parameter.MAP_WIDTH, new InputElement(() -> mapWidth.getText(), value -> mapWidth.setText(value)));
+        inputElements.put(Parameter.MAP_HEIGHT, new InputElement(() -> mapHeight.getText(), value -> mapHeight.setText(value)));
+        inputElements.put(Parameter.MAP_TYPE, new InputElement(() -> mapType.getValue(), value -> mapType.setValue(value)));
+        inputElements.put(Parameter.MUTATION_TYPE, new InputElement(() -> mutationVariant.getValue(), value -> mutationVariant.setValue(value)));
+        inputElements.put(Parameter.GENOTYPE_LENGTH, new InputElement(() -> genotypeLengthInput.getText(), value -> genotypeLengthInput.setText(value)));
+        inputElements.put(Parameter.MAX_MUTATIONS, new InputElement(() -> maxMutationsInput.getText(), value -> maxMutationsInput.setText(value)));
+        inputElements.put(Parameter.MIN_MUTATIONS, new InputElement(() -> minMutationsInput.getText(), value -> minMutationsInput.setText(value)));
+        inputElements.put(Parameter.STARTING_PLANTS, new InputElement(() -> startingPlantsInput.getText(), value -> startingPlantsInput.setText(value)));
+        inputElements.put(Parameter.STARTING_ANIMALS, new InputElement(() -> startingAnimalsInput.getText(), value -> startingAnimalsInput.setText(value)));
+        inputElements.put(Parameter.MIN_REPRODUCTION_ENERGY, new InputElement(() -> minReproductionEnergyInput.getText(), value -> minReproductionEnergyInput.setText(value)));
+        inputElements.put(Parameter.REPRODUCTION_ENERGY_COST, new InputElement(() -> reproductionEnergyCostInput.getText(), value -> reproductionEnergyCostInput.setText(value)));
+        inputElements.put(Parameter.STARTING_ENERGY, new InputElement(() -> startingEnergyInput.getText(), value -> startingEnergyInput.setText(value)));
+        inputElements.put(Parameter.DAILY_ENERGY_COST, new InputElement(() -> dailyEnergyCostInput.getText(), value -> dailyEnergyCostInput.setText(value)));
+        inputElements.put(Parameter.DAILY_PLANTS_GROWTH, new InputElement(() -> dailyPlantsGrowthInput.getText(), value -> dailyPlantsGrowthInput.setText(value)));
+        inputElements.put(Parameter.ENERGY_FROM_PLANT, new InputElement(() -> energyFromPlantInput.getText(), value -> energyFromPlantInput.setText(value)));
+        inputElements.put(Parameter.SAVE_TO_CSV, new InputElement(() -> String.valueOf(saveStatsToCSVCheckBox.isSelected()), value -> saveStatsToCSVCheckBox.setSelected(Boolean.parseBoolean(value))));
+    }
+
 }

@@ -1,4 +1,4 @@
-package agh.ics.oop.model.Config;
+package agh.ics.oop.model.config;
 
 public enum Parameter {
     MAP_WIDTH,
@@ -8,10 +8,13 @@ public enum Parameter {
     GENOTYPE_LENGTH,
     MIN_MUTATIONS,
     MAX_MUTATIONS,
+    STARTING_ANIMALS,
+    STARTING_PLANTS,
     MIN_REPRODUCTION_ENERGY,
     REPRODUCTION_ENERGY_COST,
     STARTING_ENERGY,
     DAILY_ENERGY_COST,
     DAILY_PLANTS_GROWTH,
-    ENERGY_FROM_PLANT
+    ENERGY_FROM_PLANT,
+    SAVE_TO_CSV,
 }

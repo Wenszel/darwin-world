@@ -1,9 +1,8 @@
 package agh.ics.oop.model.maps;
 
-import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.mapElements.MapElement;
-import agh.ics.oop.model.mapElements.MapField;
 import agh.ics.oop.model.mapElements.Tunnel;
 import agh.ics.oop.model.maps.generators.TunnelGenerator;
 import agh.ics.oop.model.utils.Vector2d;
@@ -18,9 +17,10 @@ public class TunnelMap extends GlobeMap {
 
     @Override
     public void initializeMap() {
-        //Tutaj będziemy wybierali preferowane pola, początkowe zwierzątka oraz rośliny itp
         super.initializeMap();
-        TunnelGenerator.generate(10, mapFields, tunnels);
+        int numberOfFields = width * height;
+        int numberOfTunnels = numberOfFields / 20;
+        TunnelGenerator.generate(numberOfTunnels, mapFields, tunnels);
     }
 
     @Override
@@ -45,13 +45,14 @@ public class TunnelMap extends GlobeMap {
     }
 
     @Override
-    public List<MapElement> objectsAt(Vector2d position) {
-        List<MapElement> objectAtPosition = super.objectsAt(position);
-        tunnels.forEach((tunnel) -> {
-            if(tunnel.getPosition() == position) {
-                objectAtPosition.add(tunnel);
+    public List<MapElement> stackObjectsToDraw(Vector2d position) {
+        List<MapElement> stackObjectsAtPosition = super.stackObjectsToDraw(position);
+        for (Tunnel tunnel: tunnels) {
+            if (tunnel.getPosition().equals(position)) {
+                stackObjectsAtPosition.add(tunnel);
+                break;
             }
-        });
-        return objectAtPosition;
+        }
+        return stackObjectsAtPosition;
     }
 }
