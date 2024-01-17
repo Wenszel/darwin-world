@@ -8,8 +8,8 @@ import java.util.*;
 
 public class MapField {
     private final SimulationConfig config;
-    private LinkedList<Animal> animalsOnField = new LinkedList();
-    private boolean isPreferred;
+    private final LinkedList<Animal> animalsOnField = new LinkedList();
+    private final boolean isPreferred;
     private final Vector2d fieldPosition;
     private Plant plant;
     private boolean hasPlant = false;
@@ -30,14 +30,6 @@ public class MapField {
 
     public List<Animal> getAnimalsOnField() {
         return Collections.unmodifiableList(animalsOnField);
-    }
-
-    public List<MapElement> getElementsOnField() {
-        List<MapElement> elements = new LinkedList<>(getAnimalsOnField());
-        if (plant != null) {
-            elements.add(plant);
-        }
-        return elements;
     }
 
     public boolean isPreferred() {

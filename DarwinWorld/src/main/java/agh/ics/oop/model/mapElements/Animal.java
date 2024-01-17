@@ -79,7 +79,7 @@ public class Animal implements MapElement {
 
     public void reproduction(Animal child) {
         this.energy -= reproductionCost;
-        if (alfaAnimal != null) {
+        if (alfaAnimal != null && child.alfaAnimal == null) {
             alfaAnimal.descendants += 1;
             child.alfaAnimal = alfaAnimal;
         }
@@ -122,16 +122,16 @@ public class Animal implements MapElement {
         this.deathDay = dayCounter;
     }
 
-    public void markAsDescendant() {
+    public void markAsAlfa() {
         this.alfaAnimal = this;
     }
-     public void markAsDescendant(Animal alfaAnimal) {
+     public void markDescendant(Animal alfaAnimal) {
         if(alfaAnimal.equals(this.alfaAnimal)) {
-            children.forEach(child -> child.markAsDescendant(alfaAnimal));
+            children.forEach(child -> child.markDescendant(alfaAnimal));
         } else if(this.alfaAnimal == null) {
             this.alfaAnimal = alfaAnimal;
             alfaAnimal.descendants+=1;
-            children.forEach(child -> child.markAsDescendant(alfaAnimal));
+            children.forEach(child -> child.markDescendant(alfaAnimal));
         }
     }
 

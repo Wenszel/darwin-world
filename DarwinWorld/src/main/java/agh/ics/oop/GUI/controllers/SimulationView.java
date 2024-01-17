@@ -79,9 +79,9 @@ public class SimulationView implements SimulationListener {
             // so that it is visible on the map during the calculation
             drawSimulationWindow();
             // Added additional thread to avoid freezing the GUI to calculate descendants if there are to many of them
-            observedAnimal.markAsDescendant();
+            observedAnimal.markAsAlfa();
             Thread thread = new Thread(() -> {
-                observedAnimal.markAsDescendant(observedAnimal);
+                observedAnimal.markDescendant(observedAnimal);
                 Platform.runLater(this::drawSimulationWindow);
             });
             thread.start();
