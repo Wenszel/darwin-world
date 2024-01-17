@@ -1,11 +1,10 @@
 package agh.ics.oop.model.mapElements;
 
-import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.utils.AnimalComparator;
 import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MapField {
     private final SimulationConfig config;

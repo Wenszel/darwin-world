@@ -1,8 +1,8 @@
 package agh.ics.oop.GUI.controllers;
 
-import agh.ics.oop.SimulationConfig;
-import agh.ics.oop.model.Config.Parameter;
-import agh.ics.oop.model.Config.variants.MutationVariantName;
+import agh.ics.oop.model.config.SimulationConfig;
+import agh.ics.oop.model.config.Parameter;
+import agh.ics.oop.model.config.variants.MutationVariantName;
 import agh.ics.oop.model.maps.MapType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

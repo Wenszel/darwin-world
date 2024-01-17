@@ -1,9 +1,8 @@
 package agh.ics.oop.model.maps;
 
-import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.mapElements.MapElement;
-import agh.ics.oop.model.mapElements.MapField;
 import agh.ics.oop.model.mapElements.Tunnel;
 import agh.ics.oop.model.maps.generators.TunnelGenerator;
 import agh.ics.oop.model.utils.Vector2d;

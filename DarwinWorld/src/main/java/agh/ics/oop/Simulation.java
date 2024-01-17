@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.SimulationListener;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.factories.MapFactory;
 import agh.ics.oop.model.maps.WorldMap;
 

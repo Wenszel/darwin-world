@@ -1,8 +1,8 @@
 package agh.ics.oop.model.utils;
 
 
-import agh.ics.oop.model.Config.variants.MutationVariant;
-import agh.ics.oop.model.Config.variants.MutationVariantName;
+import agh.ics.oop.model.config.variants.MutationVariant;
+import agh.ics.oop.model.config.variants.MutationVariantName;
 import agh.ics.oop.model.factories.MutationVariantFactory;
 import agh.ics.oop.model.mapElements.Animal;
 
