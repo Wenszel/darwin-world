@@ -17,9 +17,10 @@ public class TunnelMap extends GlobeMap {
 
     @Override
     public void initializeMap() {
-        //Tutaj będziemy wybierali preferowane pola, początkowe zwierzątka oraz rośliny itp
         super.initializeMap();
-        TunnelGenerator.generate(10, mapFields, tunnels);
+        int numberOfFields = width * height;
+        int numberOfTunnels = numberOfFields / 20;
+        TunnelGenerator.generate(numberOfTunnels, mapFields, tunnels);
     }
 
     @Override
