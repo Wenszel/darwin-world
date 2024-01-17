@@ -1,7 +1,6 @@
 package agh.ics.oop.model.mapElements;
 
-import agh.ics.oop.SimulationConfig;
-import agh.ics.oop.model.maps.WorldMap;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.stats.AnimalStatistics;
 import agh.ics.oop.model.stats.AnimalStatisticsBuilder;
 import agh.ics.oop.model.utils.Direction;
@@ -10,13 +9,8 @@ import agh.ics.oop.model.utils.Genotype;
 import agh.ics.oop.model.utils.Vector2d;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeType;
 
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 
 public class Animal implements MapElement {
@@ -32,7 +26,7 @@ public class Animal implements MapElement {
     private int dayAlive = 0;
     private int deathDay;
     private int eatenPlants = 0;
-    private int descendants = -1; // -1 because we recursively count descendants of an animal starting from himself
+    private int descendants = 0;
     private Animal alfaAnimal = null;
 
     public Animal(Vector2d position, SimulationConfig config) {
@@ -128,15 +122,22 @@ public class Animal implements MapElement {
         this.deathDay = dayCounter;
     }
 
+    public void markAsDescendant() {
+        this.alfaAnimal = this;
+    }
      public void markAsDescendant(Animal alfaAnimal) {
-        this.alfaAnimal = alfaAnimal;
-        alfaAnimal.descendants += 1;
-        children.forEach(child -> child.markAsDescendant(alfaAnimal));
+        if(alfaAnimal.equals(this.alfaAnimal)) {
+            children.forEach(child -> child.markAsDescendant(alfaAnimal));
+        } else if(this.alfaAnimal == null) {
+            this.alfaAnimal = alfaAnimal;
+            alfaAnimal.descendants+=1;
+            children.forEach(child -> child.markAsDescendant(alfaAnimal));
+        }
     }
 
     public void unmarkAsDescendant() {
         alfaAnimal = null;
-        descendants = -1;
+        descendants = 0;
     }
 
     public int getChildrenAmount() {

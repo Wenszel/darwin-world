@@ -1,7 +1,7 @@
 package agh.ics.oop.GUI.controllers;
 
 import agh.ics.oop.Simulation;
-import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.SimulationListener;
 import agh.ics.oop.model.mapElements.*;
 import agh.ics.oop.model.maps.WorldMap;
@@ -67,7 +67,7 @@ public class SimulationView implements SimulationListener {
 
     private void handleCanvasClick(MouseEvent event, double fieldWidth, double fieldHeight, Map<Vector2d, MapField> mapFields) {
         Vector2d clickedPosition = new Vector2d((int) (event.getX() / fieldWidth), (int) (event.getY() / fieldHeight));
-        if (mapFields.get(clickedPosition) != null && mapFields.get(clickedPosition).getAnimalsOnField().get(0) != null) {
+        if (mapFields.get(clickedPosition) != null && mapFields.get(clickedPosition).getAnimalsOnField().size() > 0) {
             if (observedAnimal != null) {
                 // It is faster to unmark all animals from list of animals
                 // than unmark the same way as mark (i mean recursively)
@@ -79,6 +79,7 @@ public class SimulationView implements SimulationListener {
             // so that it is visible on the map during the calculation
             drawSimulationWindow();
             // Added additional thread to avoid freezing the GUI to calculate descendants if there are to many of them
+            observedAnimal.markAsDescendant();
             Thread thread = new Thread(() -> {
                 observedAnimal.markAsDescendant(observedAnimal);
                 Platform.runLater(this::drawSimulationWindow);
