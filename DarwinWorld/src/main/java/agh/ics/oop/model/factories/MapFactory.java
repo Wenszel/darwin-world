@@ -1,6 +1,6 @@
 package agh.ics.oop.model.factories;
 
-import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.maps.GlobeMap;
 import agh.ics.oop.model.maps.TunnelMap;
 import agh.ics.oop.model.maps.WorldMap;

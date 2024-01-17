@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.maps.WorldMap;
 
 public class DayManager {

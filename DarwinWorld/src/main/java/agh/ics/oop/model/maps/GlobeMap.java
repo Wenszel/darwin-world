@@ -1,16 +1,14 @@
 package agh.ics.oop.model.maps;
 
-import agh.ics.oop.SimulationConfig;
+import agh.ics.oop.model.config.SimulationConfig;
 import agh.ics.oop.model.mapElements.Animal;
 import agh.ics.oop.model.mapElements.MapElement;
 import agh.ics.oop.model.mapElements.MapField;
-import agh.ics.oop.model.stats.AnimalStatistics;
 import agh.ics.oop.model.utils.Genotype;
 import agh.ics.oop.model.utils.KeyValue;
 import agh.ics.oop.model.utils.Vector2d;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GlobeMap implements WorldMap {
     protected UUID id;

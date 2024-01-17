@@ -1,10 +1,8 @@
-package agh.ics.oop;
+package agh.ics.oop.model.config;
 
-import agh.ics.oop.model.Config.Parameter;
-import agh.ics.oop.model.Config.variants.MutationVariantName;
+import agh.ics.oop.model.config.variants.MutationVariantName;
 import agh.ics.oop.model.maps.MapType;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class SimulationConfig {
