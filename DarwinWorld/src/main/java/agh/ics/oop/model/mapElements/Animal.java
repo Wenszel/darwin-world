@@ -32,6 +32,8 @@ public class Animal implements MapElement {
     private int dayAlive = 0;
     private int deathDay;
     private int eatenPlants = 0;
+    private int descendants = -1; // -1 because we recursively count descendants of an animal starting from himself
+    private Animal alfaAnimal = null;
 
     public Animal(Vector2d position, SimulationConfig config) {
         this.direction = new Direction();
@@ -73,14 +75,23 @@ public class Animal implements MapElement {
         energyRatio = Math.max(0, Math.min(energyRatio, 1));
         double pinkIntensity = 1 - energyRatio;
         double pinkComponent = pinkIntensity * 0.5;
-        gc.setFill(new Color(1.0, pinkComponent, pinkComponent, 1));
+        if (this.equals(alfaAnimal)) {
+            gc.setFill(Color.GOLD);
+        } else {
+            gc.setFill(new Color(1.0, pinkComponent, pinkComponent, 1));
+        }
         gc.fillRect(position.getX() * fieldWidth, position.getY() * fieldHeight, fieldWidth, fieldHeight);
     }
 
     public void reproduction(Animal child) {
-        this.energy-=reproductionCost;
+        this.energy -= reproductionCost;
+        if (alfaAnimal != null) {
+            alfaAnimal.descendants += 1;
+            child.alfaAnimal = alfaAnimal;
+        }
         this.children.add(child);
     }
+
     public void consumePlant() {
         this.energy+=energyFromPlant;
         this.eatenPlants+=1;
@@ -93,9 +104,7 @@ public class Animal implements MapElement {
     public int getEnergy() {
         return energy;
     }
-    public void addEnergy(int amount) {
-        this.energy+=amount;
-    }
+
     public Genotype getGenotype() {
         return genotype;
     }
@@ -118,27 +127,36 @@ public class Animal implements MapElement {
     public void kill(int dayCounter) {
         this.deathDay = dayCounter;
     }
-    public int getDescendants() {
-        //TODO
-        //Something is wrong with this method
-//        Set<Animal> animals = new HashSet<>(children);
-//        int amount = animals.size();
-//        for(Animal child : animals) {
-//                amount += child.getDescendants();
-//        }
-//        return amount;
-        return 10;
+
+     public void markAsDescendant(Animal alfaAnimal) {
+        this.alfaAnimal = alfaAnimal;
+        alfaAnimal.descendants += 1;
+        children.forEach(child -> child.markAsDescendant(alfaAnimal));
     }
+
+    public void unmarkAsDescendant() {
+        alfaAnimal = null;
+        descendants = -1;
+    }
+
     public int getChildrenAmount() {
         return children.size();
-    }
-    public AnimalStatistics getAnimalStats()  {
-        return new AnimalStatisticsBuilder().setGenotype(genotype).setCurrentActiveGene(genotype.getCurrentGene())
-                .setEnergy(energy).setEatenPlants(eatenPlants).setChildrenAmount(children.size()).setDescendantAmount(getDescendants())
-                .setDayAlive(dayAlive).setDeathDay(deathDay).build();
     }
 
     public int getDayAlive() {
         return dayAlive;
+    }
+
+    public AnimalStatistics getAnimalStats()  {
+        return new AnimalStatisticsBuilder()
+                .setGenotype(genotype)
+                .setCurrentActiveGene(genotype.getCurrentGene())
+                .setEnergy(energy)
+                .setEatenPlants(eatenPlants)
+                .setChildrenAmount(children.size())
+                .setDescendantAmount(descendants)
+                .setDayAlive(dayAlive)
+                .setDeathDay(deathDay)
+                .build();
     }
 }
