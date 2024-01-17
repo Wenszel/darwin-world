@@ -32,7 +32,6 @@ public class GlobeMap implements WorldMap {
 
     @Override
     public void initializeMap() {
-        //Tutaj będziemy wybierali preferowane pola, początkowe zwierzątka oraz rośliny itp
         createFields();
         growPlants(config.getStartingPlants());
         generateAnimals(config.getStartingAnimals());
